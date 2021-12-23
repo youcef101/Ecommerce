@@ -18,8 +18,8 @@ export default Products
 const Container = styled.div`
 display:flex;
 align-items:center;
-justify-content:space-evenly;
+justify-content:center;
 flex-wrap:wrap;
-
+margin-bottom:40px;
 `
 

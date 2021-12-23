@@ -5,14 +5,19 @@ import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';//logou
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';//cart
 import Badge from '@material-ui/core/Badge';
+import { Link } from 'react-router-dom';
 
 function Header() {
     return (
         <Container>
             <HeaderContainer>
+
                 <LogoContainer>
-                    <span>E-SHOP</span>
+                    <Link to='/'>
+                        <span>E-SHOP</span>
+                    </Link>
                 </LogoContainer>
+
                 <MiddleContainer>
                     <SearchContainer>
                         <SearchInput type='text' placeholder='search...' />
@@ -66,6 +71,7 @@ align-items:center;
 justify-content:space-between;
 `
 const LogoContainer = styled.div`
+a{text-decoration:none;color:black}
 cursor:pointer;
 width:20%;
 span{

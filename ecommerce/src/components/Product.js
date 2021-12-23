@@ -36,7 +36,8 @@ display:flex;
 align-items:center;
 justify-content:center;
 opacity:0;
- ransition: all 0.5s ease;
+ransition: all 0.5s ease;
+cursor:pointer;
 `
 const Container = styled.div`
 &:hover ${IconContainer}{
@@ -50,11 +51,12 @@ position:relative;
 `
 
 const ImageContainer = styled.div`
+margin:10px;
 margin-bottom:5px;
 background-color:#f5fbfd;
 img{
-width:30vw;
-height:400px;
+width:20vw;
+height:350px;
 }
 
 `
