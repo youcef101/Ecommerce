@@ -7,7 +7,9 @@ export const verifyTokens = async (req, res, next) => {
     if (authToken) {
         const token = authToken.split(' ')[1]
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, user) => {
-            if (err) return console.log(err)
+            if (err) {
+                res.status(403).send('Token Is Invalid !!!')
+            }
             req.user = user
             next()
         })
@@ -19,14 +21,14 @@ export const verifyTokens = async (req, res, next) => {
 }
 export const generateAccessToken = (user) => {
     return jwt.sign({
-        id: user.id,
+        id: user._id,
         isAdmin: user.isAdmin,
         email: user.email
-    }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: "30s" })
+    }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: "1m" })
 }
 export const generateRefreshToken = (user) => {
     return jwt.sign({
-        id: user.id,
+        id: user._id,
         isAdmin: user.isAdmin,
         email: user.email
     }, process.env.REFRESH_TOKEN_SECRET_KEY)
