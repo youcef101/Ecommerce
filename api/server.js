@@ -6,6 +6,8 @@ import userRouter from './routes/user.js'
 import productRouter from './routes/product.js'
 import orderRouter from './routes/order.js'
 import cartRouter from './routes/cart.js'
+import tokenRouter from './routes/token.js'
+import mongoose from 'mongoose'
 
 //env config
 dotenv.config()
@@ -18,6 +20,17 @@ const port = process.env.PORT || 8001
 app.use(express.json())
 app.use(cors())
 
+//DB config
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    //useCreateIndex: true,
+    useUnifiedTopology: true,
+    //useFindAndModify: true,
+
+})
+    .then(console.log('connected to mongoDB !!!'))
+    .catch(err => console.log(err));
+
 //API endpoints
 app.get('/', (req, res) => {
     res.status(200).send('hello from server !!!')
@@ -28,6 +41,7 @@ app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 app.use('/api/order', orderRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/token', tokenRouter)
 
 //Listen
 app.listen(port, () => {

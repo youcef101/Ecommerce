@@ -21,22 +21,28 @@ const userSchema = mongoose.Schema({
         required: true
     },
     country: {
-        type: String
+        type: String,
+        default: ''
     },
     city: {
-        type: String
+        type: String,
+        default: ''
     },
     adresse: {
-        type: String
+        type: String,
+        default: ''
     },
     codePostal: {
-        type: String
+        type: String,
+        default: ''
     },
     phone: {
-        type: String
+        type: String,
+        default: ''
     },
     profileImage: {
-        type: String
+        type: String,
+        default: ''
     },
     location: {
         type: Array,
