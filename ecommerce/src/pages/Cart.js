@@ -101,17 +101,53 @@ function Cart() {
 
                             </RightContainer>
                         </MiddleContainer>
+                        <DividerContainer>
+                            <Divider />
+                        </DividerContainer>
+                        <MiddleContainer>
+                            <LeftContainer>
+                                <ProductImg>
+                                    <img src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" alt='' />
+                                </ProductImg>
+                                <ProductInfo>
+                                    <ProductName><b>Product:</b> HAKURA T-SHIRT</ProductName>
+                                    <Color>
+                                        <b>Color:</b> <ProductColor color="gray" />
+                                    </Color>
+                                    <Size><b>Size:</b> M</Size>
+                                </ProductInfo>
+                            </LeftContainer>
+                            <RightContainer>
+                                <QuantityContainer>
+                                    <DecrementIc onClick={Decrement}>
+                                        <RemoveOutlinedIcon fontSize="small" />
+                                    </DecrementIc>
+
+                                    <QtyInput min={0} value={quantity} readOnly />
+                                    <IncrementIc onClick={Increment}>
+                                        <AddOutlinedIcon fontSize='small' />
+                                    </IncrementIc>
+
+                                </QuantityContainer>
+                                <Price>
+                                    $ 20
+                                </Price>
+
+                            </RightContainer>
+                        </MiddleContainer>
                     </CartProduct>
-                    <Summary>
-                        <SumTitle>ORDER SUMMARY</SumTitle>
-                        <SubTotal><span>SubTotal</span><span>$ 20</span></SubTotal>
-                        <Estimated><span>Estimated Shipping</span><span>$ 5.90</span></Estimated>
-                        <Shipping><span>Shipping Discount</span><span>-$ 5.9020</span></Shipping>
-                        <Total><span>Total</span><span>$ 80</span></Total>
-                        <CheckoutBtn>
-                            CHECKOUT NOW
-                        </CheckoutBtn>
-                    </Summary>
+                    <OrderCheckout>
+                        <Summary>
+                            <SumTitle>ORDER SUMMARY</SumTitle>
+                            <SubTotal><span>SubTotal</span><span>$ 20</span></SubTotal>
+                            <Estimated><span>Estimated Shipping</span><span>$ 5.90</span></Estimated>
+                            <Shipping><span>Shipping Discount</span><span>-$ 5.90</span></Shipping>
+                            <Total><span>Total</span><span>$ 80</span></Total>
+                            <CheckoutBtn>
+                                CHECKOUT NOW
+                            </CheckoutBtn>
+                        </Summary>
+                    </OrderCheckout>
                 </Middle>
             </CartContainer>
             <Newsletter />
@@ -256,13 +292,17 @@ const CartProduct = styled.div`
 flex:1;
 width:70%;
 `
-const Summary = styled.div`
+const OrderCheckout = styled.div`
 width:25%;
+margin:10px;
+`
+const Summary = styled.div`
+width:100%;
 border:1px solid gray;
 border-radius:4px;
 display:flex;
 flex-direction:column;
-margin:10px;
+
 `
 const SumTitle = styled.div`
 text-align:center;
