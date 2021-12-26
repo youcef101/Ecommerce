@@ -7,6 +7,7 @@ import productRouter from './routes/product.js'
 import orderRouter from './routes/order.js'
 import cartRouter from './routes/cart.js'
 import tokenRouter from './routes/token.js'
+import categoryRouter from './routes/category.js'
 import mongoose from 'mongoose'
 
 //env config
@@ -42,6 +43,7 @@ app.use('/api/product', productRouter)
 app.use('/api/order', orderRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/token', tokenRouter)
+app.use('/api/category', categoryRouter)
 //public image for upload
 app.use('/public', express.static('public'));
 //Listen
