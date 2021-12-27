@@ -9,11 +9,10 @@ router.get('/', (req, res) => {
 
 //add cart
 router.post('/add', verifyTokens, async (req, res) => {
-    const newCart = new Cart(req.body);
-
+    const newCart = req.body;
     try {
-        const savedCart = await newCart.save();
-        res.status(200).json(savedCart);
+        const cart = await Cart.create(newCart);
+        res.status(200).json(cart);
     } catch (err) {
         res.status(500).json(err);
     }
@@ -53,7 +52,7 @@ router.delete("/:cartId", verifyTokens, async (req, res) => {
 //get user cart
 router.get("/find/:userId", verifyTokens, async (req, res) => {
     try {
-        if (req.user.id === req.body.userId || req.user.isAdmin === true) {
+        if (req.user.id === req.params.userId || req.user.isAdmin === true) {
             const cart = await Cart.findOne({ userId: req.params.userId });
             res.status(200).json(cart);
         } else {
