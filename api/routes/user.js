@@ -25,10 +25,11 @@ router.delete('/:userId/delete', verifyTokens, async (req, res) => {
 })
 
 //edit user info
-router.put('/:userId/info/edit', verifyTokens, async (req, res) => {
+router.put('/:userId/info/edit', verifyTokens, upload, async (req, res) => {
+    const url = req.protocol + "://" + req.get('host') + "/public/uploads/"
     try {
         if (req.user.id === req.params.userId || req.user.isAdmin === true) {
-            await User.findByIdAndUpdate(req.params.userId, { $set: req.body })
+            await User.findByIdAndUpdate(req.params.userId, { $set: req.body, profileImage: url + req.file.filename })
             res.status(200).send('Account Successfully Updated!!!')
         } else {
             res.status(403).send('Your Are Not Allowed To Modify This Account Info !!!')
@@ -38,21 +39,6 @@ router.put('/:userId/info/edit', verifyTokens, async (req, res) => {
     }
 })
 
-//edit user photo
-router.route('/:userId/photo/edit').put(upload, verifyTokens, async (req, res) => {
-    const url = req.protocol + "://" + req.get('host') + "/public/uploads/"
-    try {
-        if (req.user.id === req.params.userId || req.user.isAdmin === true) {
-            await User.findByIdAndUpdate(req.params.userId, { profileImage: url + req.file.filename });
-            res.status(200).send(`your account profile photo updated successfully !!!`);
-        } else {
-            res.status(401).send('You are Not allowed to Update this account')
-        }
-    } catch (err) {
-        res.status(500).send(err)
-    }
-
-})
 //edit user password
 router.put('/:userId/password/change', verifyTokens, async (req, res) => {
     let user = await User.findById(req.params.userId);
@@ -93,6 +79,37 @@ router.get('/:userId/all', async (req, res) => {
         res.status(500).send(err)
     }
 })
+
+//GET USER STATS
+
+router.get("/stats", verifyTokens, async (req, res) => {
+    const date = new Date();
+    const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+    try {
+        if (req.user.isAdmin === true) {
+            const data = await User.aggregate([
+                { $match: { createdAt: { $gte: lastYear } } },
+                {
+                    $project: {
+                        month: { $month: "$createdAt" },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$month",
+                        total: { $sum: 1 },
+                    },
+                },
+            ]);
+            res.status(200).json(data)
+        } else {
+            res.status(400).send('Your are Not Allowed To Get This Data!!!')
+        }
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 
 
 export default router
