@@ -3,20 +3,25 @@ import styled from 'styled-components'
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import { Link } from 'react-router-dom';
 function Product({ product }) {
     return (
         <Container>
             <ProductContainer>
                 <ImageContainer>
-                    <img src={product.img} alt='' />
+                    <img src={product.productImage} alt='' />
                 </ImageContainer>
                 <IconContainer>
                     <Icon>
                         <FavoriteBorderIcon fontSize="small" />
                     </Icon>
+
                     <Icon>
-                        <SearchIcon fontSize="small" />
+                        <Link to={`/product_detail/${product._id}`}>
+                            <SearchIcon fontSize="small" />
+                        </Link>
                     </Icon>
+
                     <Icon>
                         <ShoppingCartOutlinedIcon fontSize="small" />
                     </Icon>
@@ -55,13 +60,16 @@ margin:10px;
 margin-bottom:5px;
 background-color:#f5fbfd;
 img{
-width:20vw;
+width:30vw;
 height:350px;
 }
 
 `
 
 const Icon = styled.div`
+a{
+    color:black;
+}
 display:flex;
 align-items:center;
 justify-content:center;

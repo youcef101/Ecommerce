@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Announcements from '../components/Announcements'
 import Footer from '../components/Footer'
@@ -6,9 +6,20 @@ import Header from '../components/Header'
 import Newsletter from '../components/Newsletter'
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import RemoveOutlinedIcon from '@material-ui/icons/RemoveOutlined';
+import { useDispatch, useSelector } from 'react-redux'
+import StripeCheckout from 'react-stripe-checkout'
+import { userRequest } from '../axios'
+import { useHistory } from 'react-router-dom'
+import { DeleteCart } from '../Redux/cartSlice'
 
 function Cart() {
+    const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY
+    const cart = useSelector(state => state.cart)
+    const history = useHistory()
     const [quantity, setQuantity] = useState(0)
+    const [stripe_token, setStripeToken] = useState(null)
+    const dispatch = useDispatch()
+
     const Increment = () => {
         setQuantity(quantity + 1)
     }
@@ -18,6 +29,33 @@ function Cart() {
         }
 
     }
+
+    const onToken = (token) => {
+        setStripeToken(token)
+    }
+
+    useEffect(() => {
+        const makeRequest = async () => {
+            try {
+                const res = await userRequest.post(`/checkout/payment`, {
+                    tokenId: stripe_token?.id,
+                    amount: cart.total * 100
+
+                })
+                history.push('/success', { data: res.data })
+            } catch { }
+        }
+        stripe_token && makeRequest()
+    }, [stripe_token, cart.total, history])
+
+    const handleQuantity = (e) => {
+        setQuantity({
+            ...quantity,
+            [e.target.name]: e.target.value
+        })
+    }
+
+
     return (
         <Container>
             <Header />
@@ -34,118 +72,68 @@ function Cart() {
                 </TopContainer>
                 <Middle>
                     <CartProduct>
-                        <MiddleContainer>
+                        {cart &&
+                            cart.products.map(product =>
+                                <React.Fragment key={Math.random()}>
+                                    <MiddleContainer >
+                                        <LeftContainer>
+                                            <ProductImg >
+                                                <img src={product.productImage} alt='' />
+                                            </ProductImg>
+                                            <ProductInfo>
+                                                <ProductName><b>Product:</b> {product.title}</ProductName>
+                                                <Color>
+                                                    <b>Color:</b> <ProductColor color={product.color} />
+                                                </Color>
+                                                <Size><b>Size:</b> {product.size}</Size>
+                                            </ProductInfo>
+                                        </LeftContainer>
+                                        <RightContainer>
+                                            <QuantityContainer>
+                                                <DecrementIc onClick={Decrement}>
+                                                    <RemoveOutlinedIcon fontSize="small" />
+                                                </DecrementIc>
 
-                            <LeftContainer>
-                                <ProductImg>
-                                    <img src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" alt='' />
-                                </ProductImg>
-                                <ProductInfo>
-                                    <ProductName><b>Product:</b> JESSIE THUNDER SHOES</ProductName>
-                                    <Color>
-                                        <b>Color:</b> <ProductColor color="black" />
-                                    </Color>
-                                    <Size><b>Size:</b> 37.5</Size>
-                                </ProductInfo>
-                            </LeftContainer>
-                            <RightContainer>
-                                <QuantityContainer>
-                                    <DecrementIc onClick={Decrement}>
-                                        <RemoveOutlinedIcon fontSize="small" />
-                                    </DecrementIc>
+                                                <QtyInput name='quantity' min={0} value={product.quantity} onChange={handleQuantity} />
+                                                <IncrementIc onClick={Increment}>
+                                                    <AddOutlinedIcon fontSize='small' />
+                                                </IncrementIc>
 
-                                    <QtyInput min={0} value={quantity} readOnly />
-                                    <IncrementIc onClick={Increment}>
-                                        <AddOutlinedIcon fontSize='small' />
-                                    </IncrementIc>
+                                            </QuantityContainer>
+                                            <Price>
+                                                $ {product.price * product.quantity}
+                                            </Price>
 
-                                </QuantityContainer>
-                                <Price>
-                                    $ 20
-                                </Price>
+                                        </RightContainer>
+                                    </MiddleContainer>
+                                    <DividerContainer>
+                                        <Divider />
+                                    </DividerContainer>
+                                </React.Fragment>
+                            )}
 
-                            </RightContainer>
-                        </MiddleContainer>
-                        <DividerContainer>
-                            <Divider />
-                        </DividerContainer>
-
-                        <MiddleContainer>
-                            <LeftContainer>
-                                <ProductImg>
-                                    <img src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" alt='' />
-                                </ProductImg>
-                                <ProductInfo>
-                                    <ProductName><b>Product:</b> HAKURA T-SHIRT</ProductName>
-                                    <Color>
-                                        <b>Color:</b> <ProductColor color="gray" />
-                                    </Color>
-                                    <Size><b>Size:</b> M</Size>
-                                </ProductInfo>
-                            </LeftContainer>
-                            <RightContainer>
-                                <QuantityContainer>
-                                    <DecrementIc onClick={Decrement}>
-                                        <RemoveOutlinedIcon fontSize="small" />
-                                    </DecrementIc>
-
-                                    <QtyInput min={0} value={quantity} readOnly />
-                                    <IncrementIc onClick={Increment}>
-                                        <AddOutlinedIcon fontSize='small' />
-                                    </IncrementIc>
-
-                                </QuantityContainer>
-                                <Price>
-                                    $ 20
-                                </Price>
-
-                            </RightContainer>
-                        </MiddleContainer>
-                        <DividerContainer>
-                            <Divider />
-                        </DividerContainer>
-                        <MiddleContainer>
-                            <LeftContainer>
-                                <ProductImg>
-                                    <img src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" alt='' />
-                                </ProductImg>
-                                <ProductInfo>
-                                    <ProductName><b>Product:</b> HAKURA T-SHIRT</ProductName>
-                                    <Color>
-                                        <b>Color:</b> <ProductColor color="gray" />
-                                    </Color>
-                                    <Size><b>Size:</b> M</Size>
-                                </ProductInfo>
-                            </LeftContainer>
-                            <RightContainer>
-                                <QuantityContainer>
-                                    <DecrementIc onClick={Decrement}>
-                                        <RemoveOutlinedIcon fontSize="small" />
-                                    </DecrementIc>
-
-                                    <QtyInput min={0} value={quantity} readOnly />
-                                    <IncrementIc onClick={Increment}>
-                                        <AddOutlinedIcon fontSize='small' />
-                                    </IncrementIc>
-
-                                </QuantityContainer>
-                                <Price>
-                                    $ 20
-                                </Price>
-
-                            </RightContainer>
-                        </MiddleContainer>
                     </CartProduct>
                     <OrderCheckout>
                         <Summary>
                             <SumTitle>ORDER SUMMARY</SumTitle>
-                            <SubTotal><span>SubTotal</span><span>$ 20</span></SubTotal>
+                            <SubTotal><span>SubTotal</span><span>$ {cart.total}</span></SubTotal>
                             <Estimated><span>Estimated Shipping</span><span>$ 5.90</span></Estimated>
                             <Shipping><span>Shipping Discount</span><span>-$ 5.90</span></Shipping>
-                            <Total><span>Total</span><span>$ 80</span></Total>
-                            <CheckoutBtn>
-                                CHECKOUT NOW
-                            </CheckoutBtn>
+                            <Total><span>Total</span><span>$ {cart.total}</span></Total>
+                            <StripeCheckout
+                                name='E-SHOP'
+                                /* image='' */
+                                billingAddress
+                                shippingAddress
+                                description={`Your total is ${cart.total}`}
+                                amount={cart.total * 100}
+                                token={onToken}
+                                stripeKey={STRIPE_PUBLIC_KEY}
+                            >
+                                <CheckoutBtn>
+                                    CHECKOUT NOW
+                                </CheckoutBtn>
+                            </StripeCheckout>
                         </Summary>
                     </OrderCheckout>
                 </Middle>

@@ -1,6 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import cors from 'cors'
+import Cors from 'cors'
 import authRouter from './routes/auth.js'
 import userRouter from './routes/user.js'
 import productRouter from './routes/product.js'
@@ -8,6 +8,7 @@ import orderRouter from './routes/order.js'
 import cartRouter from './routes/cart.js'
 import tokenRouter from './routes/token.js'
 import categoryRouter from './routes/category.js'
+import stripeRouter from './routes/stripe.js'
 import mongoose from 'mongoose'
 
 //env config
@@ -19,7 +20,7 @@ const port = process.env.PORT || 8001
 
 //middlewares
 app.use(express.json())
-app.use(cors())
+app.use(Cors())
 
 //DB config
 mongoose.connect(process.env.MONGO_URL, {
@@ -44,6 +45,7 @@ app.use('/api/order', orderRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/token', tokenRouter)
 app.use('/api/category', categoryRouter)
+app.use('/api/checkout', stripeRouter)
 //public image for upload
 app.use('/public', express.static('public'));
 //Listen

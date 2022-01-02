@@ -15,6 +15,7 @@ export default Announcements
 const Container = styled.div`
 height:25px;
 background-color: teal;
+
 `
 const AnnouncementContainer = styled.div`
 text-align:center;

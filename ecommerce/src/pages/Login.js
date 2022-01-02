@@ -1,15 +1,50 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import SignInValidation from '../authValidationForm/LoginValidation'
+import { useDispatch } from 'react-redux'
+import { LoginCalls } from '../Redux/apiCalls'
 
 function Login() {
+    const dispatch = useDispatch()
+    const [errors, setErrors] = useState('')
+    const emailRef = useRef()
+    const passwordRef = useRef()
+    const [values, setValues] = useState({
+        email: '',
+        password: ''
+    })
+    const handleChange = (e) => {
+        setValues({
+            ...values,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const Login = async (e) => {
+        e.preventDefault()
+        setErrors(SignInValidation(values))
+        let user = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value
+        }
+        LoginCalls(dispatch, user)
+    }
+
+
     return (
         <Container>
             <LoginContainer>
                 <InputContainer>
-                    <EmailInput type='email' placeholder='Enter Your Email' />
-                    <PasswordInput type='password' placeholder='Enter Your Password' />
-                    <LoginBtn>
+                    <InputCon>
+                        <EmailInput ref={emailRef} name='email' type='email' onChange={handleChange} placeholder='Enter Your Email' />
+                        {errors.email && <Errors><span>{errors.email}</span></Errors>}
+                    </InputCon>
+                    <InputCon>
+                        <PasswordInput ref={passwordRef} name='password' onChange={handleChange} type='password' placeholder='Enter Your Password' />
+                        {errors.password && <Errors><span>{errors.password}</span></Errors>}
+                    </InputCon>
+                    <LoginBtn onClick={Login}>
                         LOGIN
                     </LoginBtn>
                     <BottomContainer>
@@ -39,18 +74,18 @@ const Container = styled.div`
 `
 const LoginContainer = styled.div`
 background-color:white;
-width:60%;
+width:40%;
 
 `
 const InputContainer = styled.div`
- display:flex;
- flex-direction:column;
- margin:15px;
+width:97%;
+display:flex;
+flex-direction:column;
+margin-bottom:10px;
+margin-top:5px; 
 `
 const EmailInput = styled.input`
-padding-left:5px;
-//flex:1;
-margin:3px;
+width:100%;
 border-radius:4px;
 background-color: #f2f2f2;
 height:40px;
@@ -80,8 +115,24 @@ margin:5px;
 a{
     text-decoration:none;
     font-size:18px;
-    //font-weight:500;
     color:black;
     cursor:pointer;
 }
 `
+const Errors = styled.div`
+display:flex;
+align-items:start;
+justify-content:start;
+margin-top:-2px;
+//margin-bottom:3px;
+padding-left:15px;
+span{
+color:red;
+font-size:11px;
+text-align:start;
+}
+`
+const InputCon = styled.div`
+width:100%;
+margin:5px;
+` 

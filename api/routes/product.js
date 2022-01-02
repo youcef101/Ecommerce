@@ -1,5 +1,6 @@
 import express from 'express'
 import Product from '../models/Product.js'
+import Category from '../models/Category.js'
 import { verifyTokens } from '../utils/authTokens.js'
 import { upload } from '../utils/upload.js'
 const router = express.Router()
@@ -61,12 +62,26 @@ router.put('/:productId/edit', verifyTokens, upload, async (req, res) => {
 })
 
 
-//get product by category
-router.get('/:categoryId/all', async (req, res) => {
+//get product by id
+router.get('/:productId/', async (req, res) => {
     try {
-        const all_products = await Product.find()
-        const category_product = all_products.find(product => product.categoryId != req.params.categoryId)
-        res.status(200).send(category_product)
+        const product = await Product.findById(req.params.productId)
+        res.status(200).send(product)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+//get products by category name
+router.get('/:category/all', async (req, res) => {
+    const category_title = req.params.category
+    const cat_title = category_title.split(' ').join(' ')
+    //console.log(cat_title)
+    try {
+        const cat = await Category.findOne({ title: cat_title })
+        const products = await Product.find()
+        const cat_product = products.filter(product => product.categoryId == cat._id)
+        res.status(200).send(cat_product)
     } catch (err) {
         res.status(500).send(err)
     }
@@ -77,6 +92,35 @@ router.get('/:title', async (req, res) => {
     try {
         const product = await Product.findOne({ title: req.params.title })
         res.status(200).send(product)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+//get 8 products randomly
+router.get('/random/all/d', async (req, res) => {
+    const result = []
+    try {
+        const all_products = await Product.find()
+        for (let i = 0; i < 9;) {
+            const random = Math.floor(Math.random() * all_products.length);
+            if (result.indexOf(all_products[random]) !== -1) {
+                continue;
+            };
+            result.push(all_products[random])
+            i++
+        }
+        res.status(200).send(result)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+//get all products
+router.get('/all/d', async (req, res) => {
+    try {
+        const products = await Product.find()
+        res.status(200).send(products)
     } catch (err) {
         res.status(500).send(err)
     }

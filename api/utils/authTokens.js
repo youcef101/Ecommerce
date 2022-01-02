@@ -24,7 +24,7 @@ export const generateAccessToken = (user) => {
         id: user._id,
         isAdmin: user.isAdmin,
         email: user.email
-    }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: "1m" })
+    }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: "1d" })
 }
 export const generateRefreshToken = (user) => {
     return jwt.sign({
