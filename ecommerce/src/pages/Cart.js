@@ -8,12 +8,12 @@ import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import RemoveOutlinedIcon from '@material-ui/icons/RemoveOutlined';
 import { useDispatch, useSelector } from 'react-redux'
 import StripeCheckout from 'react-stripe-checkout'
-import { userRequest } from '../axios'
+import { userRequest, axiosInstance } from '../axios'
 import { useHistory } from 'react-router-dom'
 import { DeleteCart } from '../Redux/cartSlice'
 
 function Cart() {
-    const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY
+    const STRIPE_PUBLIC_KEY = 'pk_test_51KBMyHFWL49iTtC4ICYYoBkDwQsdALHlfw9r3Uz2FSJk4ekxAgZdaIFnuaXW5EB60jDcxSUmTYVInMNxRvNtysS400X91avrQ3'
     const cart = useSelector(state => state.cart)
     const history = useHistory()
     const [quantity, setQuantity] = useState(0)
@@ -37,7 +37,7 @@ function Cart() {
     useEffect(() => {
         const makeRequest = async () => {
             try {
-                const res = await userRequest.post(`/checkout/payment`, {
+                const res = await axiosInstance.post(`/checkout/payment`, {
                     tokenId: stripe_token?.id,
                     amount: cart.total * 100
 
@@ -55,7 +55,7 @@ function Cart() {
         })
     }
 
-
+    console.log(stripe_token)
     return (
         <Container>
             <Header />

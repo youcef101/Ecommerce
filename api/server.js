@@ -10,6 +10,8 @@ import tokenRouter from './routes/token.js'
 import categoryRouter from './routes/category.js'
 import stripeRouter from './routes/stripe.js'
 import mongoose from 'mongoose'
+import { upload } from './utils/upload.js'
+
 
 //env config
 dotenv.config()
@@ -48,6 +50,10 @@ app.use('/api/category', categoryRouter)
 app.use('/api/checkout', stripeRouter)
 //public image for upload
 app.use('/public', express.static('public'));
+
+app.post('/api/upload', upload, (req, res) => {
+    res.status(200).send('file upload')
+})
 //Listen
 app.listen(port, () => {
     console.log(`listen on localhost:${port}`)

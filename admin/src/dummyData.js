@@ -119,3 +119,10 @@ export const products_rows = [
     { id: 10, productImage: '/images/product/product.png', title: 'Veste cuir synthetique rembourrée homme Bleu', stock: 253, price: '$ 250', status: 'active' },
 
 ];
+export const categories_rows = [
+    { id: 1, categoryImage: '/images/product/product.png', title: 'HOMME MODE', createdAt: '21 dec 2021', status: 'active' },
+    { id: 2, categoryImage: '/images/product/product.png', title: 'HOMME ACCESSOIRES', createdAt: '21 dec 2021', status: 'active' },
+    { id: 3, categoryImage: '/images/product/product.png', title: 'FEMME MODE', createdAt: '21 dec 2021', status: 'active' },
+    { id: 4, categoryImage: '/images/product/product.png', title: 'FEMME ACCESSOIRES', createdAt: '21 dec 2021', status: 'active' },
+    { id: 5, categoryImage: '/images/product/product.png', title: 'KIDS MODE', createdAt: '21 dec 2021', status: 'active' },
+];

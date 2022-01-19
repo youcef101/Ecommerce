@@ -1,35 +1,117 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import PublishIcon from '@material-ui/icons/Publish';
+import { adminRequest } from '../axios';
 
 function AddUser() {
+    const [inputs, setInputs] = useState({
+        profileImage: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        password_confirm: '',
+        country: '',
+        city: '',
+        codePostal: '',
+        adresse: '',
+        phone: '',
+        isAdmin: false
+    })
+    const [selected, setSelected] = useState(inputs.isAdmin)
     const [radio, setRadio] = useState({
         radioMale: false,
         radioFemale: false,
         radioOthers: false
     })
+    const handleInputs = (e) => {
+        setInputs({
+            ...inputs,
+            [e.target.name]: e.target.value
+        })
+    }
+    const handleFile = (e) => {
+        setInputs({ ...inputs, profileImage: e.target.files[0] });
+    }
+    const handleSelected = (e) => {
+        setSelected({
+            ...inputs,
+            [e.target.name]: e.target.value === 'Yes' ? true : false
+        })
+    }
+
+    const CreateNewUser = async (e) => {
+        e.preventDefault();
+        let newUser = {
+            firstName: inputs.firstName,
+            lastName: inputs.lastName,
+            email: inputs.email,
+            password: inputs.password,
+            password_confirm: inputs.password_confirm,
+            country: inputs.country,
+            city: inputs.city,
+            codePostal: inputs.codePostal,
+            adresse: inputs.adresse,
+            phone: inputs.phone,
+            isAdmin: inputs.isAdmin
+        }
+        if (inputs.profileImage) {
+            const formData = new FormData();
+            const filename = `IMAGE-${Date.now()}` + `${inputs?.profileImage?.name}`.split(' ').join('').toLowerCase()
+            formData.append('filename', filename);
+            formData.append('file', inputs.profileImage);
+            newUser.profileImage = filename;
+            try {
+                await adminRequest.post('/upload', formData);
+            } catch { }
+        }
+        try {
+            await adminRequest.post('/auth/register', newUser);
+            setInputs(
+                {
+                    ...inputs,
+                    [e.target.name]: ''
+                }
+            )
+        } catch { }
+    }
+    console.log(inputs)
+    console.log(selected)
     return (
         <Container>
             <TitleContainer>New User</TitleContainer>
             <FormContainer>
+
+                {/*  <TopContainer>
+                    <ProfileImageContainer>
+                        <ProfileImage>
+                            <img src='/images/user/my-image.jpg' alt='' />
+                        </ProfileImage>
+                    </ProfileImageContainer>
+                </TopContainer> */}
                 <LeftRight>
                     <LeftContainer>
                         <InputContainer>
                             <LabelContainer>Firstname</LabelContainer>
-                            <FirstNameInput type='text' />
+                            <FirstNameInput type='text' name='firstName' onChange={handleInputs} />
                         </InputContainer>
                         <InputContainer>
                             <LabelContainer>Lastname</LabelContainer>
-                            <LastNameInput type='text' />
+                            <LastNameInput type='text' name='lastName' onChange={handleInputs} />
                         </InputContainer>
                         <InputContainer>
-                            <LabelContainer>Email</LabelContainer>
-                            <EmailInput type='email' />
+                            <LabelContainer>Country</LabelContainer>
+                            <EmailInput type='text' name='country' onChange={handleInputs} />
                         </InputContainer>
                         <InputContainer>
-                            <LabelContainer>Active</LabelContainer>
-                            <SelectContainer>
-                                <OptionContainer>Yes</OptionContainer>
+                            <LabelContainer>Code Postal</LabelContainer>
+                            <AdresseInput type='text' name='codePostal' onChange={handleInputs} />
+                        </InputContainer>
+                        <InputContainer>
+                            <LabelContainer>isAdmin</LabelContainer>
+                            <SelectContainer name='isAdmin' onChange={handleSelected}>
                                 <OptionContainer>No</OptionContainer>
+                                <OptionContainer >Yes</OptionContainer>
                             </SelectContainer>
                         </InputContainer>
                         <InputContainer>
@@ -37,15 +119,15 @@ function AddUser() {
                             <Radio>
                                 <RadioContainer>
                                     <MaleInput type='radio' id='Male' name='Male' value='Male' />
-                                    <LabelContainer for="Male">Male</LabelContainer>
+                                    <LabelContainer htmlFor="Male">Male</LabelContainer>
                                 </RadioContainer>
                                 <RadioContainer>
                                     <MaleInput type='radio' id='Female' name='Female' value='Female' />
-                                    <LabelContainer for="Female">Female</LabelContainer>
+                                    <LabelContainer htmlFor="Female">Female</LabelContainer>
                                 </RadioContainer>
                                 <RadioContainer>
                                     <MaleInput type='radio' id='Others' name='Others' value='Others' />
-                                    <LabelContainer for="Others">Others</LabelContainer>
+                                    <LabelContainer htmlFor="Others">Others</LabelContainer>
                                 </RadioContainer>
                             </Radio>
                         </InputContainer>
@@ -53,28 +135,36 @@ function AddUser() {
                     </LeftContainer>
                     <RightContainer>
                         <InputContainer>
-                            <LabelContainer>Fullname</LabelContainer>
-                            <FullNameInput type='text' />
-                        </InputContainer>
-                        <InputContainer>
-                            <LabelContainer>Userame</LabelContainer>
-                            <UsernameInput type='text' />
-                        </InputContainer>
-                        <InputContainer>
-                            <LabelContainer>Adresse</LabelContainer>
-                            <AdresseInput type='text' />
-                        </InputContainer>
-                        <InputContainer>
-                            <LabelContainer>Phone</LabelContainer>
-                            <PhoneInput type='text' />
+                            <LabelContainer>Email</LabelContainer>
+                            <EmailInput type='email' name='email' onChange={handleInputs} />
                         </InputContainer>
                         <InputContainer>
                             <LabelContainer>Password</LabelContainer>
-                            <PasswordInput type='password' />
+                            <PasswordInput type='password' name='password' onChange={handleInputs} />
+                        </InputContainer>
+                        <InputContainer>
+                            <LabelContainer>Password Confirm</LabelContainer>
+                            <PasswordInput type='password' name='password_confirm' onChange={handleInputs} />
+                        </InputContainer>
+                        <InputContainer>
+                            <LabelContainer>City</LabelContainer>
+                            <AdresseInput type='text' name='city' onChange={handleInputs} />
+                        </InputContainer>
+                        <InputContainer>
+                            <LabelContainer>Adresse</LabelContainer>
+                            <AdresseInput type='text' name='adresse' onChange={handleInputs} />
+                        </InputContainer>
+                        <InputContainer>
+                            <LabelContainer>Phone</LabelContainer>
+                            <PhoneInput type='text' name='phone' onChange={handleInputs} />
+                        </InputContainer>
+                        <InputContainer style={{ marginTop: '15px' }}>
+                            <LabelFile htmlFor='file'><PublishIcon fontSize='small' />Upload Profile Image</LabelFile>
+                            <input type='file' id='file' name='file' style={{ display: 'none' }} onChange={handleFile} />
                         </InputContainer>
                     </RightContainer>
                 </LeftRight>
-                <CreateContainer>
+                <CreateContainer onClick={CreateNewUser}>
                     <CreateBtn>Create</CreateBtn>
                 </CreateContainer>
             </FormContainer>
@@ -91,6 +181,33 @@ padding:10px 15px;
 // -webkit-box-shadow: 0px 2px 15px 2px #8C8C8C; 
 // box-shadow: 0px 2px 15px 2px #8C8C8C;
 `
+const LabelFile = styled.label`
+cursor:pointer;
+background-color:teal;
+color:white;
+border-radius:5px;
+padding:10px 10px;
+display:flex;
+align-items:center;
+justify-content:center;
+//width:20%;
+`
+/* const TopContainer = styled.div`
+//width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+`
+const ProfileImageContainer = styled.div`
+
+`
+const ProfileImage = styled.div`
+img{
+    width:30%;
+    height:30%;
+    border-radius:50%;
+}
+` */
 const TitleContainer = styled.h1``
 const FormContainer = styled.form`
 flex:4;

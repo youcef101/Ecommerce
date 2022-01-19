@@ -7,7 +7,7 @@ import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';/
 import Badge from '@material-ui/core/Badge';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
-import axiosInstance from '../axios';
+import { axiosInstance } from '../axios';
 import { FilterProducts } from '../Redux/searchSlice';
 function Header() {
     const quantity = useSelector(state => state.cart.quantity)

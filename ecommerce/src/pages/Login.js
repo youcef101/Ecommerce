@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import SignInValidation from '../authValidationForm/LoginValidation'
 import { useDispatch } from 'react-redux'
-import { LoginCalls } from '../Redux/apiCalls'
+import { LoginCall } from '../Redux/apiCalls'
+
 
 function Login() {
     const dispatch = useDispatch()
@@ -28,7 +29,7 @@ function Login() {
             email: emailRef.current.value,
             password: passwordRef.current.value
         }
-        LoginCalls(dispatch, user)
+        LoginCall(dispatch, user)
     }
 
 

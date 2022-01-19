@@ -10,18 +10,10 @@ router.get('/', (req, res) => {
 })
 
 //add product
-router.post('/add', verifyTokens, upload, async (req, res) => {
-    const url = req.protocol + "://" + req.get('host') + "/public/uploads/"
-    let newProduct = {
-        categoryId: req.body.categoryId,
-        title: req.body.title,
-        desc: req.body.desc,
-        price: req.body.price,
-        productImage: url + req.file.filename,
-    }
+router.post('/add', verifyTokens, async (req, res) => {
     try {
         if (req.user.isAdmin === true) {
-            await Product.create(newProduct)
+            await Product.create(req.body)
             res.status(200).send('Product successfully created !!!')
         } else {
             res.status(400).send('You are not Allowed To Add New Product !!!')
@@ -47,11 +39,11 @@ router.delete('/:productId/delete', verifyTokens, async (req, res) => {
     }
 })
 //edit product
-router.put('/:productId/edit', verifyTokens, upload, async (req, res) => {
-    const url = req.protocol + "://" + req.get('host') + "/public/uploads/"
+router.put('/:productId/edit', verifyTokens, async (req, res) => {
+
     try {
         if (req.user.isAdmin === true) {
-            await Product.findByIdAndUpdate(req.params.productId, { $set: req.body, productImage: url + req.file.filename })
+            await Product.findByIdAndUpdate(req.params.productId, { $set: req.body })
             res.status(200).send('Product successfully Updated !!!')
         } else {
             res.status(401).send('You are not Allowed to update Product !!!')
@@ -126,4 +118,18 @@ router.get('/all/d', async (req, res) => {
     }
 })
 
+//delete product color
+router.put('/:productId/:color/delete', async (req, res) => {
+    try {
+        const current_product = await Product.findById(req.params.productId)
+        if (current_product.color.includes(req.params.color)) {
+            await current_product.updateOne({ $pull: { color: req.params.color } })
+        }
+
+
+        res.status(200).json('product color updated successfully !!!')
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
 export default router

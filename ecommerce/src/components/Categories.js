@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import axiosInstance from '../axios'
+import { axiosInstance } from '../axios'
 import { categories } from '../data'
 import CategoryItem from './CategoryItem'
 function Categories() {

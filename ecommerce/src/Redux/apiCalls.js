@@ -1,7 +1,7 @@
-import axiosInstance from "../axios"
+import { axiosInstance } from "../axios"
 import { LOGIN_FAILURE, LOGIN_START, LOGIN_SUCCESS } from "./userSlice"
 
-export const LoginCalls = async (dispatch, user) => {
+export const LoginCall = async (dispatch, user) => {
     dispatch(LOGIN_START())
     try {
         const res = await axiosInstance.post('/auth/login', user);

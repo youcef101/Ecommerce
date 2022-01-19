@@ -1,102 +1,297 @@
-import React, { useEffect, useState } from 'react'
+
 import styled from 'styled-components'
-import { Link, useParams } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import PublishIcon from '@material-ui/icons/Publish';
 import Chart from '../components/Chart'
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/lib/css/styles.css";
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import { useDispatch } from 'react-redux';
+import { getAllCategories, updateProduct } from '../Redux/apiCalls';
+import { useSelector } from 'react-redux';
+import HtmlReactParser from 'html-react-parser'
+import { adminRequest } from '../axios';
 import { product_data } from '../dummyData.js'
 
-function SingleProduct({ products_data }) {
-    const [current_product, setCurrentProduct] = useState({})
-    const { id } = useParams()
-    //console.log(id)
-    useEffect(() => {
-        const res = products_data?.find(item => item.id == id)
-        setCurrentProduct(res)
-    }, [id])
+
+function SingleProduct() {
+    const PF = 'http://localhost:8001/public/uploads/'
+    const dispatch = useDispatch()
+    const [color, setColor] = useColor("hex", "#121212");
+    const location = useLocation();
+    const productId = location.pathname.split("/")[2];
+    const categories = useSelector(state => state?.product?.categories)
+    const [current_product, setCurrentProduct] = useState(null)
+    const [category, setCategory] = useState(current_product?.categoryId)
+    const [product_colors, setProductColors] = useState([])
+    const [product_size, setProductsSize] = useState([])
+    const [addData, setAddData] = useState(current_product?.desc)
+
     console.log(current_product)
+
+
+    const getCurrentProduct = async () => {
+        const res = await adminRequest.get(`/product/${productId}`)
+        const data = await res.data
+        setCurrentProduct(data)
+        setProductsSize(data?.size)
+        setProductColors(data?.color)
+    }
+    useEffect(() => {
+        getCurrentProduct()
+    }, [productId])
+
+
+    useEffect(() => {
+        getAllCategories(dispatch)
+    }, [dispatch])
+
+
+
+    //handle inputs
+    const [inputs, setInputs] = useState({
+        productImage: current_product?.productImage,
+        title: current_product?.title,
+        price: current_product?.price,
+        stock: current_product?.stock
+
+    })
+
+    const handleInfo = (e) => {
+        setInputs({
+            ...inputs,
+            [e.target.name]: e.target.value
+        })
+    }
+    const handleFile = (e) => {
+        setInputs({ ...inputs, productImage: e.target.files[0] });
+    }
+
+    /*  const handleEditor = (e, editor) => {
+         const data = editor.getData();
+         setAddData(data)
+     } */
+    const handleProductsColors = (e) => {
+        setProductColors(prev => [...prev, color.hex])
+    }
+    //console.log(product_colors)
+    const handleCheckBox = (e) => {
+
+        let index = product_size.indexOf(e.target.name)
+        if (!e.target.checked && product_size.indexOf(e.target.name) > -1) {
+            const x = product_size.splice(index, 1)
+            setProductsSize(product_size.filter(item => item !== x))
+        } else {
+            setProductsSize([
+                ...product_size,
+                e.target.name
+
+            ])
+        }
+
+    }
+
+    const EditProduct = async (e) => {
+        e.preventDefault();
+        const editedProduct = {
+            categoryId: category,
+            title: inputs.title,
+            desc: addData,
+            color: product_colors,
+            size: product_size,
+            stock: inputs.stock,
+            price: inputs.price
+        }
+        if (inputs.productImage) {
+            const formData = new FormData();
+            const filename = `IMAGE-${Date.now()}` + `${inputs?.productImage?.name}`.split(' ').join('').toLowerCase()
+            formData.append('filename', filename);
+            formData.append('file', inputs.productImage);
+            editedProduct.productImage = filename;
+            try {
+                await adminRequest.post('/upload', formData);
+            } catch { }
+        }
+        updateProduct(productId, editedProduct, dispatch)
+        getCurrentProduct()
+    }
+    //console.log(inputs)
     return (
         <Container>
-            <TopContainer>
-                <TitleContainer>Product</TitleContainer>
-                <CreateNewUserBtn><Link to='/AddProduct'>Create</Link> </CreateNewUserBtn>
-            </TopContainer>
+
             <MiddleContainer>
                 <ChartContainer>
                     <Chart data={product_data} title='Sales Performence' grid dataKey='Sales' />
                 </ChartContainer>
                 <ProductInfoContainer>
-                    {current_product && <>
-                        <ProductImageContainer>
-                            <ProductImage>
-                                <img src={current_product?.productImage} alt='' />
-                            </ProductImage>
-                            <ProductTitle>
-                                <span>{current_product?.title}</span>
-                            </ProductTitle>
-                        </ProductImageContainer>
-                        <ProductInfo>
-                            <SalesInfo>
-                                <Sales>Sales</Sales>
-                                <SalesValue>$ 4523</SalesValue>
-                            </SalesInfo>
-                            <SalesInfo>
-                                <Sales>Active</Sales>
+
+                    <ProductImageContainer>
+                        <ProductImage>
+                            <img src={PF + current_product?.productImage} alt='' />
+                        </ProductImage>
+                        <ProductTitle>
+                            <span>{current_product?.title} </span>
+                        </ProductTitle>
+                    </ProductImageContainer>
+                    <ProductInfo>
+                        <SalesInfo>
+                            <Sales>Sales</Sales>
+                            <SalesValue>$ 4523</SalesValue>
+                        </SalesInfo>
+                        <SalesInfo>
+                            <Sales>Active</Sales>
+                            {current_product?.status ?
                                 <SalesValue>Yes</SalesValue>
-                            </SalesInfo>
-                            <SalesInfo>
-                                <Sales>inStock</Sales>
-                                <SalesValue>No</SalesValue>
-                            </SalesInfo>
-                        </ProductInfo>
-                    </>}
+                                : <SalesValue>No</SalesValue>}
+                        </SalesInfo>
+                        <SalesInfo>
+
+                            <Sales>inStock</Sales>
+                            {current_product?.stock !== 0 ?
+                                <SalesValue>Yes</SalesValue>
+                                : <SalesValue>No</SalesValue>}
+                        </SalesInfo>
+                    </ProductInfo>
+
                 </ProductInfoContainer>
             </MiddleContainer>
             <BottomContainer>
-                <Bottom>
-                    <Left>
-                        <InputContainer>
-                            <LabelContainer>Product Name</LabelContainer>
-                            <ProductNameInput type='text' />
-                        </InputContainer>
-                        <InputContainer>
-                            <LabelContainer>In Stock</LabelContainer>
-                            <SelectContainer>
-                                <OptionContainer>Yes</OptionContainer>
-                                <OptionContainer>No</OptionContainer>
-                            </SelectContainer>
-                        </InputContainer>
-                        <InputContainer>
-                            <LabelContainer>Active</LabelContainer>
-                            <SelectContainer>
-                                <OptionContainer>Yes</OptionContainer>
-                                <OptionContainer>No</OptionContainer>
-                            </SelectContainer>
-                        </InputContainer>
-                    </Left>
-                    <Right>
-                        <UserProfileImageContainer>
-                            <UserProfileImage>
-                                <img src='/images/product/product.png' alt='' />
-                            </UserProfileImage>
-                            <InputContainer >
-                                <LabelContainer htmlFor='file' style={{
-                                    cursor: 'pointer',
-                                    width: '100px', backgroundColor: 'teal', color: 'white',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    borderRadius: '5px'
-                                }}>
-                                    <PublishIcon fontSize='small' />Upload</LabelContainer>
-                                <input type='file' id='file' style={{ display: 'none' }} />
-                            </InputContainer>
+                {current_product && <>
+                    <UserProfileImageContainer>
+                        <UserProfileImage>
+                            <img src={PF + current_product?.productImage} alt='' />
+                        </UserProfileImage>
+                        <UploadContainer >
+                            <LabelContainer htmlFor='file' style={{
+                                cursor: 'pointer',
+                                width: '200px', height: '35px', backgroundColor: 'teal', color: 'white',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                borderRadius: '5px'
+                            }}>
+                                <PublishIcon fontSize='small' />Upload</LabelContainer>
+                            <input type='file' id='file' style={{ display: 'none' }} onChange={handleFile} />
+                        </UploadContainer>
 
-                        </UserProfileImageContainer>
-                    </Right>
-                </Bottom>
-                <EditContainer>
-                    <EditBtn type='submit'>Edit</EditBtn>
-                </EditContainer>
-            </BottomContainer>
-        </Container>
+                    </UserProfileImageContainer>
+                    <Row>
+                        <InputContainer type='category'>
+                            <LabelContainer>Category</LabelContainer>
+                            <SelectContainer value={category} onChange={(e) => setCategory(e.target.value)}>
+                                {categories &&
+                                    categories.map(item => <React.Fragment key={Math.random()}>
+                                        <OptionContainer name='category' value={item._id} >{item.title}</OptionContainer>
+                                    </React.Fragment>)}
+                            </SelectContainer>
+                        </InputContainer>
+                        <InputContainer type='title'>
+                            <LabelContainer >Title</LabelContainer>
+                            <ProductTitleInput type='text' name='title' defaultValue={current_product?.title} onChange={handleInfo} />
+                        </InputContainer>
+                    </Row>
+                    <InputContainer style={{ marginTop: '30px', marginBottom: '30px', width: '90%' }} type='editor'>
+                        <LabelContainer style={{ marginBottom: '15px' }} >Description</LabelContainer>
+                        <CKEditor
+                            style={{ display: 'flex', justifyContent: 'center' }}
+                            editor={ClassicEditor}
+                            data={current_product?.desc}
+
+                            onChange={(e, editor) => {
+                                const data = editor.getData();
+                                setAddData(data)
+                            }}
+                        />
+                        {/* <div>{HtmlReactParser(addData)}</div> */}
+                    </InputContainer>
+                    <InputContainer style={{ marginTop: '30px', marginBottom: '30px' }} >
+                        <LabelContainer style={{ marginBottom: '15px' }} >Color</LabelContainer>
+                        <ColorPicker
+                            width={300}
+                            height={150}
+                            color={color}
+                            onChange={setColor}
+                            hideHSV
+                            hideRGB
+                            dark />
+                        <ColorContainer>
+                            {product_colors &&
+                                product_colors?.map(item =>
+                                    <ProductColor style={{ cursor: 'pointer' }} key={Math.random()} color={item} />
+                                )}
+                        </ColorContainer>
+                        <PickProductColors onClick={handleProductsColors} >Pick Colors</PickProductColors>
+                    </InputContainer>
+
+                    <InputContainer>
+                        <LabelContainer >Size</LabelContainer>
+                        <CheckBoxContainer>
+
+
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='X' onChange={handleCheckBox} checked={current_product?.size.indexOf('X') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='x'>X</CheckBoxLabel>
+                            </Check>
+
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='XS' onChange={handleCheckBox} checked={current_product?.size.indexOf('XS') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='xs'>XS</CheckBoxLabel>
+                            </Check>
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='L' onChange={handleCheckBox} checked={current_product?.size.indexOf('L') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='l'>L</CheckBoxLabel>
+                            </Check>
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='S' onChange={handleCheckBox} checked={current_product?.size.indexOf('S') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='s'>S</CheckBoxLabel>
+                            </Check>
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='M' onChange={handleCheckBox} checked={current_product?.size.indexOf('M') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='m'>M</CheckBoxLabel>
+                            </Check>
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='XXL' onChange={handleCheckBox} checked={current_product?.size.indexOf('XXL') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='xxl'>XXL</CheckBoxLabel>
+                            </Check>
+                            <Check>
+                                <CheckBoxInput type='checkbox' name='XL' onChange={handleCheckBox} checked={current_product?.size.indexOf('XL') > -1 ? true : null} />
+                                <CheckBoxLabel htmlFor='xl'>XL</CheckBoxLabel>
+                            </Check>
+
+                        </CheckBoxContainer>
+                        <CheckedSizeContainer>
+                            <Label>checked size:</Label>
+                            {product_size &&
+                                product_size.map(item =>
+                                    <CheckedSize key={Math.random()}>[ {item} ]</CheckedSize>
+                                )}
+                        </CheckedSizeContainer>
+                    </InputContainer>
+
+                    <InputContainer>
+                        <LabelContainer >Price</LabelContainer>
+                        <ProductTitleInput type='text' name='price' defaultValue={current_product?.price} onChange={handleInfo} />
+                    </InputContainer>
+
+                    <InputContainer>
+                        <LabelContainer >Stock</LabelContainer>
+                        <ProductTitleInput type='text' name='stock' defaultValue={current_product?.stock} onChange={handleInfo} />
+                    </InputContainer>
+                    <InputContainer>
+                        <LabelContainer>Active</LabelContainer>
+                        <SelectContainer>
+                            {current_product?.status ?
+                                <OptionContainer>Yes</OptionContainer>
+                                :
+                                <OptionContainer>No</OptionContainer>}
+                        </SelectContainer>
+                    </InputContainer>
+                    <CreateContainer onClick={EditProduct} >
+                        <CreateBtn>Edit Product</CreateBtn>
+                    </CreateContainer>
+                </>}
+            </BottomContainer >
+        </Container >
     )
 }
 
@@ -106,31 +301,7 @@ flex:4;
 margin:15px;
 border-radius:5px;
 `
-const TopContainer = styled.div`
-//padding:10px 15px;
-margin:0px 15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-`
-const TitleContainer = styled.h2``
-const CreateNewUserBtn = styled.button`
-color:white;
-background-color:teal;
-border:none;
-height:30px;
-font-weight:500;
-border-radius:5px;
-font-size:16px;
-cursor:pointer;
-&:hover{
-    background-color:#00cccc;
-}
-a{
-    color:white;
-    text-decoration:none;
-}
-`
+
 const ChartContainer = styled.div`
 flex:2;
 margin-top:-25px;
@@ -196,41 +367,102 @@ box-shadow: 0px 2px 15px 2px #8C8C8C;
 display:flex;
 flex-direction:column;
 `
-const Bottom = styled.div`
-display:flex;
-flex:4;
-`
-const Left = styled.div`
-flex:2;
-`
-const Right = styled.div`
-flex:2;
-`
+
+const CheckBoxContainer = styled.div`
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                width:60%;
+                `
+const Check = styled.div`
+                display:flex;
+                align-items:center;
+                `
+const CheckBoxInput = styled.input`
+
+                `
+const CheckBoxLabel = styled.label`
+
+                `
+const CheckedSizeContainer = styled.div`
+                display:flex;
+                align-items:center;
+                margin:15px 5px;
+                `
+const CheckedSize = styled.div`
+                margin:0px 5px;
+                `
+const Label = styled.span``
+const PickProductColors = styled.button`
+                background-color:teal;
+                border:none;
+                margin:15px 0px;
+                border-radius:5px;
+                width:100px;
+                height:35px;
+                color:white;
+                font-weight:600;
+                cursor:pointer;
+                &:hover{
+                    background - color:#00cccc;
+}
+                `
+const ColorContainer = styled.div`
+                display:flex;
+                align-items:center;
+                margin:15px 0px;
+                `
+const ProductColor = styled.div`
+                margin-right:10px;
+                width:20px;
+                height:20px;
+                border-radius:50%;
+                background-color:${props => props.color}
+                `
+
 const InputContainer = styled.div`
-display:flex;
-flex-direction:column;
-`
+                margin:10px;
+                display:flex;
+                flex-direction:column;
+               width: ${props => props.type === 'category' ? '30%' : '50%'}
+                `
+
 const LabelContainer = styled.label`
-color:gray;
-margin:10px 0px;
-`
-const ProductNameInput = styled.input`
-border:none;
-border-bottom:1px solid gray;
-//height:35px;
-width:80%;
-&:focus{
-    outline:none;
-   
+                color:gray;
+                margin:5px 0px;
+                `
+const ProductTitleInput = styled.input`
+                width:100%;
+                height:35px;
+                &:focus{
+                    outline:none;
 }
-`
+                `
 const SelectContainer = styled.select`
-width:60%;
-&:focus{
-    outline:none;
+               // width:40%;
+                height:40px;
+                &:focus{
+                    outline:none;
+}
+                `
+const OptionContainer = styled.option``
+const CreateContainer = styled.div`
+                margin:30px 20px;
+                `
+const CreateBtn = styled.button`
+                background-color:darkblue;
+                color:white;
+                font-weight:600;
+                font-size:16px;
+                border:none;
+                border-radius:10px;
+                width:20%;
+                cursor:pointer;
+                height:30px;
+                &:hover{
+                    background - color:blue;
 }
 `
-const OptionContainer = styled.option``
 const UserProfileImageContainer = styled.div`
 display:flex;
 align-items:center;
@@ -238,31 +470,16 @@ flex-direction:column;
 `
 const UserProfileImage = styled.div`
 img{
-    width:200px;
-    height:200px;
+    width:300px;
+    height:300px;
     //border:1px solid gray;
     border-radius:5px;
     object-fit:cover;
 }
 `
-
-const EditContainer = styled.div`
+const Row = styled.div`
 display:flex;
-//justify-content:flex-end;
-
+justify-content:center;
+width:100%;
 `
-const EditBtn = styled.button`
-border:none;
-color:white;
-background-color:teal;
-font-size:17px;
-font-weight:500;
-padding:0px 15px;
-border-radius:5px;
-cursor:pointer;
-height:30px;
-width:200px;
-
-&:hover{
-    background-color:#00cccc;
-}`
+const UploadContainer = styled.div``

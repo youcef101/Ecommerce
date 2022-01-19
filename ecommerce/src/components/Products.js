@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { popularProducts } from '../data'
 import Product from './Product'
-import axiosInstance from '../axios.js'
+import { axiosInstance } from '../axios.js'
 function Products({ filters, cat, sort }) {
     const [category_products, setCategoryProducts] = useState([])
     const [filters_products, setFiltersProducts] = useState([])

@@ -19,7 +19,14 @@ router.post('/register', async (req, res) => {
         email: req.body.email,
         password: hash_password,
         password_confirm: req.body.password_confirm,
-        fullName: req.body.firstName + ' ' + req.body.lastName
+        fullName: req.body.firstName + ' ' + req.body.lastName,
+        country: req.body.country,
+        city: req.body.city,
+        codePostal: req.body.codePostal,
+        adresse: req.body.adresse,
+        isAdmin: req.body.isAdmin,
+        phone: req.body.phone,
+        profileImage: req.body.profileImage
     }
     let email = await User.findOne({ email: req.body.email })
 

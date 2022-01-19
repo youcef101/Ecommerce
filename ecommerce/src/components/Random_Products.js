@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
-import axiosInstance from '../axios'
+import { axiosInstance } from '../axios'
 import Product from './Product'
 function Random_Products() {
     const [random_products, setRandomProducts] = useState('')

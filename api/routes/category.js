@@ -9,15 +9,11 @@ router.get('/', (req, res) => {
 })
 
 //add category
-router.post('/add', verifyTokens, upload, async (req, res) => {
-    const url = req.protocol + "://" + req.get('host') + "/public/uploads/"
-    let newCategory = {
-        title: req.body.title,
-        categoryImage: url + req.file.filename,
-    }
+router.post('/add', verifyTokens, async (req, res) => {
+
     try {
         if (req.user.isAdmin === true) {
-            await Category.create(newCategory)
+            await Category.create(req.body)
             res.status(200).send('Category created successfully !!!')
         } else {
             res.status(400).send('You are not Allowed To Add New Category !!!')
@@ -29,12 +25,13 @@ router.post('/add', verifyTokens, upload, async (req, res) => {
 })
 
 //edit Category
-router.put('/:categoryId/edit', verifyTokens, upload, async (req, res) => {
-    const url = req.protocol + "://" + req.get('host') + "/public/uploads/"
+router.put('/:categoryId/info/edit', verifyTokens, async (req, res) => {
     try {
         if (req.user.isAdmin === true) {
-            await Category.findByIdAndUpdate(req.params.categoryId, { $set: req.body, categoryImage: url + req.file.filename })
+
+            await Category.findByIdAndUpdate(req.params.categoryId, { $set: req.body })
             res.status(200).send('Category edited successfully !!!')
+
         } else {
             res.status(400).send('Your are not Allowed !!!')
         }
@@ -45,7 +42,7 @@ router.put('/:categoryId/edit', verifyTokens, upload, async (req, res) => {
 })
 
 //delete Category
-router.delete('/:categoryId/dlete', verifyTokens, async (req, res) => {
+router.delete('/:categoryId/delete', verifyTokens, async (req, res) => {
 
     try {
         if (req.user.isAdmin === true) {
@@ -65,6 +62,16 @@ router.get('/all', async (req, res) => {
     try {
         const all_category = await Category.find()
         res.status(200).send(all_category)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
+//get category by id
+router.get('/get/:catId/d', async (req, res) => {
+    try {
+        const result = await Category.findById(req.params.catId)
+        res.status(200).send(result)
     } catch (err) {
         res.status(500).send(err)
     }

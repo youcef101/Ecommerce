@@ -7,7 +7,7 @@ import Newsletter from '../components/Newsletter'
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import RemoveOutlinedIcon from '@material-ui/icons/RemoveOutlined';
 import { useParams } from 'react-router-dom'
-import axiosInstance from '../axios'
+import { axiosInstance } from '../axios'
 import { useDispatch } from 'react-redux'
 import { AddCart } from '../Redux/cartSlice'
 

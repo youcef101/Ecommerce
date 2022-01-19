@@ -4,7 +4,11 @@ import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LanguageIcon from '@material-ui/icons/Language';
 import Badge from '@material-ui/core/Badge';
+import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
+import { useDispatch } from 'react-redux';
+
 function Topbar() {
+
     return (
         <Container>
 
@@ -33,6 +37,12 @@ function Topbar() {
                     <ProfileImage>
                         <img src='/images/user/my-image.jpg' />
                     </ProfileImage>
+                    <LogoutContainer >
+                        <LogoutIc><ExitToAppOutlinedIcon fontSize='small' /></LogoutIc>
+                        <Logout>
+                            <span>LOGOUT</span>
+                        </Logout>
+                    </LogoutContainer>
                 </MenuContainer>
             </RightMenuContainer>
 
@@ -54,7 +64,17 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 `
-
+const LogoutContainer = styled.div`
+display:flex;
+align-items:center;
+margin:0px 5px;
+cursor:pointer;
+`
+const Logout = styled.div``
+const LogoutIc = styled.div`
+display:flex;
+align-items:center;
+`
 const LeftMenuContainer = styled.div`
 `
 const LogoContainer = styled.div`

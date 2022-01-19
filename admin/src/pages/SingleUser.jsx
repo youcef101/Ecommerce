@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
@@ -9,114 +9,178 @@ import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import GpsNotFixedIcon from '@material-ui/icons/GpsNotFixed';
 import PublishIcon from '@material-ui/icons/Publish';
+import { adminRequest, axiosInstance } from '../axios'
+import { updateUser } from '../Redux/apiCalls'
+import { useDispatch } from 'react-redux'
 
 
-function SingleUser({ users_data }) {
-    //console.log(data)
-    const [current_edited_user, setCurrentEditedUser] = useState({})
-    const { id } = useParams()
-    console.log(id)
+function SingleUser() {
+    const dispatch = useDispatch()
+    const PF = 'http://localhost:8001/public/uploads/'
+    const location = useLocation();
+    const userId = location.pathname.split("/")[2];
+    const [current_user, setCurrentUser] = useState(null)
+    const [inputs, setInputs] = useState({
+        profileImage: current_user?.profileImage,
+        firstName: current_user?.firstName,
+        lastName: current_user?.lastName,
+        email: current_user?.email,
+        country: current_user?.country,
+        city: current_user?.city,
+        codePostal: current_user?.codePostal,
+        adresse: current_user?.adresse,
+        phone: current_user?.phone,
+    })
+    const handleInputs = (e) => {
+        setInputs({
+            ...inputs,
+            [e.target.name]: e.target.value
+        })
+    }
+    const handleFile = (e) => {
+        setInputs({ ...inputs, profileImage: e.target.files[0] });
+    }
+    const getCurrentUser = async () => {
+        try {
+            const res = await axiosInstance.get(`/user/${userId}`);
+            const data = await res.data
+            setCurrentUser(data)
+        } catch { }
+    }
     useEffect(() => {
-        const res = users_data?.find(item => item.id == id)
-        setCurrentEditedUser(res)
-    }, [id])
-    console.log(current_edited_user)
+        getCurrentUser()
+    }, [userId])
+
+    const EditUser = async (e) => {
+        e.preventDefault();
+        let edited_user = {
+            firstName: inputs.firstName,
+            lastName: inputs.lastName,
+            email: inputs.email,
+            country: inputs.country,
+            city: inputs.city,
+            codePostal: inputs.codePostal,
+            adresse: inputs.adresse,
+            phone: inputs.phone,
+
+        }
+        if (inputs.profileImage) {
+            const formData = new FormData();
+            const filename = `IMAGE-${Date.now()}` + `${inputs?.profileImage?.name}`.split(' ').join('').toLowerCase()
+            formData.append('filename', filename);
+            formData.append('file', inputs.profileImage);
+            edited_user.profileImage = filename;
+            try {
+                await adminRequest.post('/upload', formData);
+            } catch { }
+
+        }
+        updateUser(userId, edited_user, dispatch) &&
+            getCurrentUser()
+
+    }
+
+    console.log(current_user)
     return (
         <Container>
             <TopContainer>
                 <TitleContainer>Edited User</TitleContainer>
                 <CreateNewUserBtn><Link to='/create/new'>Create</Link> </CreateNewUserBtn>
             </TopContainer>
-            {current_edited_user &&
-                <BottomContainer>
-                    <LeftContainer>
-                        <UserImageContainer>
-                            <UserImage>
-                                <img src={current_edited_user?.profileImage} />
-                            </UserImage>
-                            <UserInfoContainer>
-                                <Username>{current_edited_user?.firstName + ' ' + current_edited_user?.lastName}</Username>
-                                <UserSub>Software Engineer</UserSub>
-                            </UserInfoContainer>
-                        </UserImageContainer>
-                        <AccountDetailsContainer>
-                            <Title>Account Details</Title>
-                            <DetailsContainer>
-                                <IconContainer><PermIdentityIcon fontSize='small' /></IconContainer>
-                                <DetailsItem>{current_edited_user?.firstName + ' ' + current_edited_user?.lastName}</DetailsItem>
-                            </DetailsContainer>
-                            <DetailsContainer>
-                                <IconContainer><MailOutlineIcon fontSize='small' /></IconContainer>
-                                <DetailsItem>{current_edited_user?.email}</DetailsItem>
-                            </DetailsContainer>
-                            <DetailsContainer>
-                                <IconContainer><CalendarTodayIcon fontSize='small' /></IconContainer>
-                                <DetailsItem>01.04.1998</DetailsItem>
-                            </DetailsContainer>
-                            <DetailsContainer>
-                                <IconContainer><PhoneAndroidIcon fontSize='small' /></IconContainer>
-                                <DetailsItem>+ 216 xx xxx xxx</DetailsItem>
-                            </DetailsContainer>
-                            <DetailsContainer>
-                                <IconContainer><GpsNotFixedIcon fontSize='small' /></IconContainer>
-                                <DetailsItem>New York | USA</DetailsItem>
-                            </DetailsContainer>
-                        </AccountDetailsContainer>
-                    </LeftContainer>
-                    <RightContainer>
-                        <FormContainer>
-                            <Left>
 
-                                <InputContainer>
-                                    <LabelContainer>First Name</LabelContainer>
-                                    <FirstNameInput type='text' />
-                                </InputContainer>
-                                <InputContainer>
-                                    <LabelContainer>Last Name</LabelContainer>
-                                    <LastNameInput type='text' />
-                                </InputContainer>
-                                <InputContainer>
-                                    <LabelContainer>Email</LabelContainer>
-                                    <EmailInput type='text' />
-                                </InputContainer>
-                                <InputContainer>
-                                    <LabelContainer>Phone</LabelContainer>
-                                    <PhoneInput type='text' />
-                                </InputContainer>
-                                <InputContainer>
-                                    <LabelContainer>City</LabelContainer>
-                                    <CityInput type='text' />
-                                </InputContainer>
-                                <InputContainer>
-                                    <LabelContainer>Country</LabelContainer>
-                                    <CountryInput type='text' />
-                                </InputContainer>
-                                <InputContainer>
-                                    <LabelContainer>Code Postal</LabelContainer>
-                                    <PostalInput type='text' />
-                                </InputContainer>
+            <BottomContainer>
+                <LeftContainer>
+                    <UserImageContainer>
+                        <UserImage>
+                            <img src={current_user?.profileImage && PF + current_user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                        </UserImage>
+                        <UserInfoContainer>
+                            <Username>{current_user?.fullName}</Username>
+                            <UserSub>Software Engineer</UserSub>
+                        </UserInfoContainer>
+                    </UserImageContainer>
+                    <AccountDetailsContainer>
+                        <Title>Account Details</Title>
+                        <DetailsContainer>
+                            <IconContainer><PermIdentityIcon fontSize='small' /></IconContainer>
+                            <DetailsItem>{current_user?.fullName}</DetailsItem>
+                        </DetailsContainer>
+                        <DetailsContainer>
+                            <IconContainer><MailOutlineIcon fontSize='small' /></IconContainer>
+                            <DetailsItem>{current_user?.email}</DetailsItem>
+                        </DetailsContainer>
+                        <DetailsContainer>
+                            <IconContainer><CalendarTodayIcon fontSize='small' /></IconContainer>
+                            <DetailsItem>01.04.1998</DetailsItem>
+                        </DetailsContainer>
+                        <DetailsContainer>
+                            <IconContainer><PhoneAndroidIcon fontSize='small' /></IconContainer>
+                            <DetailsItem>+ 216 {current_user?.phone}</DetailsItem>
+                        </DetailsContainer>
+                        <DetailsContainer>
+                            <IconContainer><GpsNotFixedIcon fontSize='small' /></IconContainer>
+                            <DetailsItem>New York | USA</DetailsItem>
+                        </DetailsContainer>
+                    </AccountDetailsContainer>
+                </LeftContainer>
+                <RightContainer>
+                    <FormContainer>
+                        <Left>
 
-                            </Left>
-                            <Right>
-                                <UserProfileImageContainer>
-                                    <UserProfileImage>
-                                        <img src='/images/user/my-image.jpg' alt='' />
-                                    </UserProfileImage>
-                                    <InputContainer >
-                                        <LabelContainer htmlFor='file' style={{ cursor: 'pointer' }}><PublishIcon fontSize='small' /></LabelContainer>
-                                        <input type='file' id='file' style={{ display: 'none' }} />
-                                    </InputContainer>
-                                    <EditContainer>
-                                        <EditBtn type='submit'>Edit</EditBtn>
-                                    </EditContainer>
-                                </UserProfileImageContainer>
-                            </Right>
+                            <InputContainer>
+                                <LabelContainer>First Name</LabelContainer>
+                                <FirstNameInput type='text' name='firstName' onChange={handleInputs} defaultValue={current_user?.firstName} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>Last Name</LabelContainer>
+                                <LastNameInput type='text' name='lastName' onChange={handleInputs} defaultValue={current_user?.lastName} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>Email</LabelContainer>
+                                <EmailInput type='text' name='email' onChange={handleInputs} defaultValue={current_user?.email} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>Phone</LabelContainer>
+                                <PhoneInput type='text' name='phone' onChange={handleInputs} defaultValue={current_user?.phone} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>City</LabelContainer>
+                                <CityInput type='text' name='city' onChange={handleInputs} defaultValue={current_user?.city} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>Country</LabelContainer>
+                                <CountryInput type='text' name='country' onChange={handleInputs} defaultValue={current_user?.country} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>Code Postal</LabelContainer>
+                                <PostalInput type='text' name='codePostal' onChange={handleInputs} defaultValue={current_user?.codePostal} />
+                            </InputContainer>
+                            <InputContainer>
+                                <LabelContainer>Adresse</LabelContainer>
+                                <PostalInput type='text' name='adresse' onChange={handleInputs} defaultValue={current_user?.adresse} />
+                            </InputContainer>
 
-                        </FormContainer>
+                        </Left>
+                        <Right>
+                            <UserProfileImageContainer>
+                                <UserProfileImage>
+                                    <img src={current_user?.profileImage && PF + current_user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                                </UserProfileImage>
+                                <InputContainer style={{ marginTop: '15px' }}>
+                                    <LabelFile htmlFor='file'><PublishIcon fontSize='small' />Edit Profile Image</LabelFile>
+                                    <input type='file' id='file' name='file' style={{ display: 'none' }} onChange={handleFile} />
+                                </InputContainer>
+                                <EditContainer onClick={EditUser}>
+                                    <EditBtn type='submit'>Edit</EditBtn>
+                                </EditContainer>
+                            </UserProfileImageContainer>
+                        </Right>
 
-                    </RightContainer>
-                </BottomContainer>
-            }
+                    </FormContainer>
+
+                </RightContainer>
+            </BottomContainer>
+
         </Container>
     )
 }
@@ -129,6 +193,20 @@ border-radius:5px;
 //padding:10px 15px;
 // -webkit-box-shadow: 0px 2px 15px 2px #8C8C8C; 
 // box-shadow: 0px 2px 15px 2px #8C8C8C;
+`
+const LabelFile = styled.label`
+cursor:pointer;
+background-color:teal;
+color:white;
+border-radius:5px;
+padding:10px 10px;
+display:flex;
+align-items:center;
+justify-content:center;
+//width:20%;
+&:hover{
+    background-color:#00cccc;
+}
 `
 const TopContainer = styled.div`
 //padding:10px 15px;
@@ -290,7 +368,7 @@ border-radius:5px;
 cursor:pointer;
 height:30px;
 width:100px;
-margin-top:100px;
+margin-top:130px;
 &:hover{
     background-color:#00cccc;
 }

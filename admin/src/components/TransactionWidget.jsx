@@ -9,237 +9,241 @@ function TransactionWidget() {
         <Container>
             <WidgetTitle><span>Latest Transactions</span></WidgetTitle>
             <TableContainer >
-                <TableRow>
-                    <TableH>Customer</TableH>
-                    <TableH>Date</TableH>
-                    <TableH>Amount</TableH>
-                    <TableH>Status</TableH>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Pending' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Approved' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Pending' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Declined' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Approved' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Pending' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Declined' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Pending' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
-                <TableRow>
-                    <TableCols>
-                        <CustomerImage>
-                            <img src='/images/user/my-image.jpg' alt='' />
-                        </CustomerImage>
-                        <CustomerName>
-                            Susan Carol
-                        </CustomerName>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderDate>
-                            <span>20 jun 2021</span>
-                        </CustomerOrderDate>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderAmount>
-                            <span>$ 253.452</span>
-                        </CustomerOrderAmount>
-                    </TableCols>
-                    <TableCols>
-                        <CustomerOrderStatus>
-                            <Button type='Pending' />
-                        </CustomerOrderStatus>
-                    </TableCols>
-                </TableRow>
+                <TableHead>
+                    <TableRow>
+                        <TableH>Customer</TableH>
+                        <TableH>Date</TableH>
+                        <TableH>Amount</TableH>
+                        <TableH>Status</TableH>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Pending' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Approved' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Pending' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Declined' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Approved' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Pending' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Declined' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Pending' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                    <TableRow>
+                        <TableCols>
+                            <CustomerImage>
+                                <img src='/images/user/my-image.jpg' alt='' />
+                            </CustomerImage>
+                            <CustomerName>
+                                Susan Carol
+                            </CustomerName>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderDate>
+                                <span>20 jun 2021</span>
+                            </CustomerOrderDate>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderAmount>
+                                <span>$ 253.452</span>
+                            </CustomerOrderAmount>
+                        </TableCols>
+                        <TableCols>
+                            <CustomerOrderStatus>
+                                <Button type='Pending' />
+                            </CustomerOrderStatus>
+                        </TableCols>
+                    </TableRow>
+                </TableBody>
             </TableContainer>
         </Container>
     )
@@ -269,6 +273,8 @@ width:100%;
 // flex-direction:column;
 // justify-content:space-between;
 `
+const TableHead = styled.thead``
+const TableBody = styled.tbody``
 const TableRow = styled.tr`
 width:100%;
 display:flex;

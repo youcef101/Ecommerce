@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import SignUpFormValidation from '../authValidationForm/RegisterValidation'
-import axiosInstance from '../axios.js'
+import { axiosInstance } from '../axios.js'
 
 function Register() {
     const history = useHistory()

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { LineStyle, Timeline, TrendingUp, PermIdentity, Storefront, AttachMoney, BarChart, MailOutline, DynamicFeed, ChatBubbleOutline, WorkOutline, Report, Mail, } from "@material-ui/icons";
+import CategoryOutlinedIcon from '@material-ui/icons/CategoryOutlined';
 import { NavLink } from 'react-router-dom'
 
 function SideBar() {
@@ -41,6 +42,12 @@ function SideBar() {
                         <MenuItem>
                             <PermIdentity fontSize='small' />
                             <span>USERS</span>
+                        </MenuItem>
+                    </NavLink>
+                    <NavLink to='/categories'>
+                        <MenuItem>
+                            <CategoryOutlinedIcon fontSize='small' />
+                            <span>Categories</span>
                         </MenuItem>
                     </NavLink>
                     <NavLink to='/products'>

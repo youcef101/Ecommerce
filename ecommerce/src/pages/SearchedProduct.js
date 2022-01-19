@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import axiosInstance from '../axios'
+import { axiosInstance } from '../axios'
 import Announcements from '../components/Announcements'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
