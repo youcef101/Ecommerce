@@ -87,7 +87,7 @@ const Container = styled.div`
 display:flex;
 justify-content:space-between;
 height:40vh;
-margin:10px;
+margin:30px;
 `
 const LeftContainer = styled.div`
 width:30%;

@@ -30,8 +30,9 @@ function AllProducts() {
 
     return (
         <Container>
-            <Header />
             <Announcements />
+            <Header />
+
             <SearchedProducts >
 
                 {all_products &&

@@ -9,10 +9,13 @@ import RemoveOutlinedIcon from '@material-ui/icons/RemoveOutlined';
 import { useDispatch, useSelector } from 'react-redux'
 import StripeCheckout from 'react-stripe-checkout'
 import { userRequest, axiosInstance } from '../axios'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { DeleteCart } from '../Redux/cartSlice'
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import { DeleteCartProduct } from '../Redux/apiCalls'
 
 function Cart() {
+    const PF = 'http://localhost:8001/public/uploads/'
     const STRIPE_PUBLIC_KEY = 'pk_test_51KBMyHFWL49iTtC4ICYYoBkDwQsdALHlfw9r3Uz2FSJk4ekxAgZdaIFnuaXW5EB60jDcxSUmTYVInMNxRvNtysS400X91avrQ3'
     const cart = useSelector(state => state.cart)
     const history = useHistory()
@@ -37,7 +40,7 @@ function Cart() {
     useEffect(() => {
         const makeRequest = async () => {
             try {
-                const res = await axiosInstance.post(`/checkout/payment`, {
+                const res = await axiosInstance.post(`/checkout/payment/d`, {
                     tokenId: stripe_token?.id,
                     amount: cart.total * 100
 
@@ -55,15 +58,22 @@ function Cart() {
         })
     }
 
-    console.log(stripe_token)
+    const deleteCartItem = (id) => {
+        DeleteCartProduct(id, dispatch)
+        // console.log(cart.products.filter(product => product._id != id))
+    }
+    //console.log(cart.products)
+    //console.log(cart.quantity)
+    //console.log(stripe_token)
     return (
         <Container>
-            <Header />
             <Announcements />
+            <Header />
+
             <CartContainer>
                 <Title>YOUR BAG</Title>
                 <TopContainer>
-                    <Shopping>CONTINUE SHOPPING</Shopping>
+                    <Link to="/all/products"><Shopping>CONTINUE SHOPPING</Shopping></Link>
                     <Action>
                         <Bag><a href="#">SHOPPING BAG (2)</a></Bag>
                         <Wishlist><a href="#">YOUR WISHLIST (0)</a></Wishlist>
@@ -78,7 +88,7 @@ function Cart() {
                                     <MiddleContainer >
                                         <LeftContainer>
                                             <ProductImg >
-                                                <img src={product.productImage} alt='' />
+                                                <img src={PF + product.productImage} alt='' />
                                             </ProductImg>
                                             <ProductInfo>
                                                 <ProductName><b>Product:</b> {product.title}</ProductName>
@@ -90,12 +100,12 @@ function Cart() {
                                         </LeftContainer>
                                         <RightContainer>
                                             <QuantityContainer>
-                                                <DecrementIc onClick={Decrement}>
+                                                <DecrementIc style={{ display: 'none' }} onClick={(Decrement)}>
                                                     <RemoveOutlinedIcon fontSize="small" />
                                                 </DecrementIc>
 
                                                 <QtyInput name='quantity' min={0} value={product.quantity} onChange={handleQuantity} />
-                                                <IncrementIc onClick={Increment}>
+                                                <IncrementIc style={{ display: 'none' }} onClick={Increment}>
                                                     <AddOutlinedIcon fontSize='small' />
                                                 </IncrementIc>
 
@@ -103,6 +113,9 @@ function Cart() {
                                             <Price>
                                                 $ {product.price * product.quantity}
                                             </Price>
+                                            <DeleteItem style={{ margin: '10px 0px' }} onClick={() => deleteCartItem(product._id)}>
+                                                <DeleteForeverOutlinedIcon fontSize='small' style={{ color: '#800000', cursor: 'pointer' }} />
+                                            </DeleteItem>
 
                                         </RightContainer>
                                     </MiddleContainer>
@@ -161,6 +174,10 @@ margin:20px;
 margin-top:50px;
 display:flex;
 justify-content:space-between;
+a{
+    text-decoration:none;
+    color:black;
+}
 `
 const Shopping = styled.div`
 background-color:#f2f2f2;
@@ -207,10 +224,9 @@ width:45%;
 const ProductImg = styled.div`
 width:50%;
 img{
-width:200px;
-
-cursor:pointer;
-object-fit:fit;
+width:100%;
+height:200px;
+object-fit:contain;
 }
 `
 const ProductInfo = styled.div`
@@ -328,3 +344,4 @@ justify-content:center;
     background-color:#d9d9d9;
 }
 `
+const DeleteItem = styled.div``

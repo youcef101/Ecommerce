@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 import { useState } from 'react';
 import { adminRequest } from '../axios';
+import { Link } from 'react-router-dom';
 
 function UserWidget() {
     const [latest_users, setLatestUsers] = useState([])
@@ -39,10 +40,12 @@ function UserWidget() {
                                         {/*  <MemberInf> Software Engineer</MemberInf> */}
                                     </MemberInfo>
                                 </Left>
-                                <ShowMemberBtn>
-                                    <VisibilityIcon fontSize='small' />
-                                    <span>Display</span>
-                                </ShowMemberBtn>
+                                <Link to={`/user/${user?._id}`}>
+                                    <ShowMemberBtn>
+                                        <VisibilityIcon fontSize='small' />
+                                        <span>Display</span>
+                                    </ShowMemberBtn>
+                                </Link>
                             </MembersItem>
                         </MembersItems>
                     )}
@@ -71,6 +74,7 @@ span{
 const MembersContainer = styled.div``
 const MembersItems = styled.ul`
 margin-left:-25px;
+a{text-decoration:none;}
 `
 const MembersItem = styled.li`
 list-style:none;

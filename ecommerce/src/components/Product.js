@@ -5,11 +5,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { Link } from 'react-router-dom';
 function Product({ product }) {
+    const PF = 'http://localhost:8001/public/uploads/'
     return (
         <Container>
             <ProductContainer>
                 <ImageContainer>
-                    <img src={product.productImage} alt='' />
+                    <img src={PF + product?.productImage} alt='' />
                 </ImageContainer>
                 <IconContainer>
                     <Icon>
@@ -60,8 +61,9 @@ margin:10px;
 margin-bottom:5px;
 background-color:#f5fbfd;
 img{
-width:30vw;
-height:350px;
+width:100%;
+height:200px;
+object-fit:contain;
 }
 
 `

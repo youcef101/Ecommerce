@@ -13,7 +13,7 @@ import AllProducts from './pages/AllProducts';
 import SearchedProduct from './pages/SearchedProduct';
 function App() {
   const user = useSelector(state => state.user.current_user)
-  console.log(user)
+  //console.log(user)
   return (
     <div className="App">
       <Router>

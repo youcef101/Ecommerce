@@ -37,7 +37,7 @@ router.put("/:cartId", verifyTokens, async (req, res) => {
     }
 });
 //delete cart
-router.delete("/:cartId", verifyTokens, async (req, res) => {
+router.delete("/:cartId", async (req, res) => {
     try {
         if (req.user.id === req.body.userId || req.user.isAdmin === true) {
             await Cart.findByIdAndDelete(req.params.cartId);

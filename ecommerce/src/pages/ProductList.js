@@ -19,8 +19,9 @@ function ProductList() {
 
     return (
         <Container>
-            <Header />
             <Announcements />
+            <Header />
+
 
             <Filter>
                 <Title> Filter Products:</Title>

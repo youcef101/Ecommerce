@@ -23,6 +23,11 @@ const adminSlice = createSlice({
             state.errors = true;
             state.isFetching = false;
         },
+        LOGOUT: (state) => {
+            state.errors = true;
+            state.isFetching = false;
+            state.current_user = null
+        },
         getAllUsersStart: (state) => {
             state.isFetching = true;
             state.errors = false
@@ -71,6 +76,7 @@ export const {
     LOGIN_START,
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
+    LOGOUT,
     getAllUsersFailure,
     getAllUsersStart,
     getAllUsersSuccess,

@@ -10,8 +10,11 @@ import { useParams } from 'react-router-dom'
 import { axiosInstance } from '../axios'
 import { useDispatch } from 'react-redux'
 import { AddCart } from '../Redux/cartSlice'
+import HtmlReactParser from 'html-react-parser'
+import ProductSlider from '../components/ProductSlider'
 
 function ProductDetail() {
+    const PF = 'http://localhost:8001/public/uploads/'
     const { productId } = useParams()
     const dispatch = useDispatch()
     const [quantity, setQuantity] = useState(1)
@@ -19,6 +22,7 @@ function ProductDetail() {
     const [color, setColor] = useState('')
     const [size, setSize] = useState('')
     const quantityRef = useRef()
+    const [products, setProducts] = useState([])
 
     const Increment = (e) => {
         e.preventDefault()
@@ -54,76 +58,88 @@ function ProductDetail() {
             const res = await axiosInstance.get(`/product/${productId}`)
             const data = await res.data
             setCurrentProduct(data)
+            setSize(data.size[0])
         } catch (err) {
             console.log(err)
         }
     }, [productId])
 
-    const handleSize = (e) => {
-        //e.preventDefault()
-        setSize(e.target.value)
-    }
+    useEffect(() => {
+        const getAllProducts = async () => {
+            try {
+                const res = await axiosInstance.get(`/product/${productId}/all/d`)
+                const data = await res.data
+                setProducts(data)
+            } catch { }
+        }
+        getAllProducts()
+    }, [productId])
 
-    //console.log(size)
+
     return (
         <Container>
-            <Header />
             <Announcements />
+            <Header />
+
             <DetailContainer>
-                <ProductImg>
-                    <img src={current_product.productImage} alt='' />
-                </ProductImg>
-                <ProductInfoContainer>
-                    <ProductTitle>
-                        {current_product.title}
-                    </ProductTitle>
-                    <ProductDesc>
-                        {current_product.desc}
-                    </ProductDesc>
-                    <ProductPrice>$ {current_product.price}</ProductPrice>
-                    <FilterContainer>
-                        <FilterColorContainer>
-                            <Color>Color</Color>
-                            {current_product &&
-                                current_product.color?.map(color =>
-                                    <FilterColor key={Math.random()} onClick={() => setColor(color)} color={color} />
+                {current_product && <>
+                    <ProductImg>
+                        <img src={PF + current_product.productImage} alt='' />
+                    </ProductImg>
+                    <ProductInfoContainer>
+                        <ProductTitle>
+                            {current_product?.title}
+                        </ProductTitle>
+                        <ProductDesc>
+                            {HtmlReactParser(current_product?.desc)}
+                        </ProductDesc>
+                        <ProductPrice>$ {current_product.price}</ProductPrice>
+                        <FilterContainer>
+                            <FilterColorContainer>
+                                <Color>Color</Color>
+                                {current_product &&
+                                    current_product.color?.map(color =>
+                                        <FilterColor key={Math.random()} onClick={() => setColor(color)} color={color} />
 
-                                )}
-                        </FilterColorContainer>
-                        <FilterSizeContainer>
-                            <Size>Size</Size>
-                            <SelectContainer>
-                                <select onChange={handleSize}>
-                                    {
-                                        current_product.size?.map((size) =>
-                                            <option key={size}>{size}</option>
+                                    )}
+                            </FilterColorContainer>
+                            <FilterSizeContainer>
+                                <Size>Size</Size>
+                                <SelectContainer>
+                                    <select onChange={(e) => setSize(e.target.value)}>
+                                        {
+                                            current_product.size?.map((size) =>
+                                                <option key={size}>{size}</option>
 
-                                        )}
-                                </select>
-                            </SelectContainer>
-                        </FilterSizeContainer>
-                    </FilterContainer>
+                                            )}
+                                    </select>
+                                </SelectContainer>
+                            </FilterSizeContainer>
+                        </FilterContainer>
 
-                    <AddToCartContainer>
-                        <QuantityContainer>
-                            <DecrementIc onClick={Decrement}>
-                                <RemoveOutlinedIcon fontSize="large" />
-                            </DecrementIc>
+                        <AddToCartContainer>
+                            <QuantityContainer>
+                                <DecrementIc onClick={Decrement}>
+                                    <RemoveOutlinedIcon fontSize="large" />
+                                </DecrementIc>
 
-                            <QtyInput ref={quantityRef} name='quantity' min={0} value={quantity} onChange={handleQuantity} readOnly />
-                            <IncrementIc onClick={Increment}>
-                                <AddOutlinedIcon fontSize='large' />
-                            </IncrementIc>
+                                <QtyInput ref={quantityRef} name='quantity' min={0} value={quantity} onChange={handleQuantity} readOnly />
+                                <IncrementIc onClick={Increment}>
+                                    <AddOutlinedIcon fontSize='large' />
+                                </IncrementIc>
 
-                        </QuantityContainer>
-                        <AddBTN onClick={AddToCart}>
-                            ADD TO CART
-                        </AddBTN>
-                    </AddToCartContainer>
-                </ProductInfoContainer>
-
+                            </QuantityContainer>
+                            <AddBTN onClick={AddToCart}>
+                                ADD TO CART
+                            </AddBTN>
+                        </AddToCartContainer>
+                    </ProductInfoContainer>
+                </>}
             </DetailContainer>
-
+            <div>
+                <h1 style={{ margin: '15px 15px' }}>Related products</h1>
+                {products && <ProductSlider products={products} />}
+            </div>
             <Newsletter />
             <Footer />
         </Container>
@@ -131,21 +147,26 @@ function ProductDetail() {
 }
 
 export default ProductDetail
-const Container = styled.div``
+const Container = styled.div`
+overflow:hidden;
+`
 const DetailContainer = styled.div`
 margin:15px;
 display:flex;
-//align-items:center;
-//justify-content:center;
+justify-content:space-around;
+align-items:flex-start;
+width:100%;
 `
 const ProductImg = styled.div`
+width:40%;
 margin:15px;
 img{
-    height:600px;
-    width:40vw;
+    height:500px;
+    width:35vw;
 }
 `
 const ProductInfoContainer = styled.div`
+width:60%;
 margin:10px;
 display:flex;
 flex-direction:column;

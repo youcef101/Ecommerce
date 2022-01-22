@@ -77,4 +77,17 @@ router.get('/get/:catId/d', async (req, res) => {
     }
 })
 
+//get latest 4 category
+router.get("/get/", async (req, res) => {
+    const query = req.query.new;
+    try {
+        const categories = query
+            ? await Category.find().sort({ _id: -1 }).limit(4)
+            : await Category.find();
+        res.status(200).json(categories);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 export default router

@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
 })
 
-router.post('/payment', async (req, res) => {
+router.post('/payment/d', async (req, res) => {
     await stripe.charges.create({
         source: req.body.tokenId,
         amount: req.body.amount,

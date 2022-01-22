@@ -89,12 +89,12 @@ router.get('/:title', async (req, res) => {
     }
 })
 
-//get 8 products randomly
+//get 12 products randomly
 router.get('/random/all/d', async (req, res) => {
     const result = []
     try {
         const all_products = await Product.find()
-        for (let i = 0; i < 9;) {
+        for (let i = 0; i < 12;) {
             const random = Math.floor(Math.random() * all_products.length);
             if (result.indexOf(all_products[random]) !== -1) {
                 continue;
@@ -108,6 +108,21 @@ router.get('/random/all/d', async (req, res) => {
     }
 })
 
+//get latest 12 products
+//get latest 4 category
+router.get("/get/latest/", async (req, res) => {
+    const query = req.query.new;
+    try {
+        const products = query
+            ? await Product.find().sort({ _id: -1 }).limit(12)
+            : await Product.find();
+        res.status(200).json(products);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+
 //get all products
 router.get('/all/d', async (req, res) => {
     try {
@@ -117,7 +132,16 @@ router.get('/all/d', async (req, res) => {
         res.status(500).send(err)
     }
 })
-
+//get all product except current product
+router.get('/:productId/all/d', async (req, res) => {
+    try {
+        const all_products = await Product.find()
+        const products = all_products.filter(product => product._id != req.params.productId)
+        res.status(200).send(products)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
 //delete product color
 router.put('/:productId/:color/delete', async (req, res) => {
     try {

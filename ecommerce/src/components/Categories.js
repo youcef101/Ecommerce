@@ -4,18 +4,30 @@ import { axiosInstance } from '../axios'
 import { categories } from '../data'
 import CategoryItem from './CategoryItem'
 function Categories() {
-    const [categories, setCategories] = useState('')
-    useEffect(async () => {
-        try {
-            const res = await axiosInstance.get(`/category/all`)
-            const data = await res.data
-            setCategories(data)
-        } catch (err) {
-            console.log(err)
+    const [categories, setCategories] = useState([])
+    /*   useEffect(async () => {
+          try {
+              const res = await axiosInstance.get(`/category/all`)
+              const data = await res.data
+              setCategories(data)
+          } catch (err) {
+              console.log(err)
+          }
+  
+      }, []) */
+    useEffect(() => {
+        const getLatestCategory = async () => {
+            try {
+                const res = await axiosInstance.get(`/category/get/?new=true`)
+                const data = await res.data
+                setCategories(data)
+            } catch (err) {
+                console.log(err)
+            }
         }
-
+        getLatestCategory()
     }, [])
-
+    //console.log(categories)
     return (
         <Container>
             {categories &&

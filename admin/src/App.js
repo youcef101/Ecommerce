@@ -22,20 +22,22 @@ function App() {
   const [users_data, setUsersData] = useState(users_rows)
   const [products_data, setProductsData] = useState(products_rows)
   const [categories_data, setCategoriesData] = useState(categories_rows)
-  const admin = JSON.parse(JSON.parse(localStorage.getItem('persist:root')).admin)?.current_user?.user?.isAdmin
+  //const admin = JSON.parse(JSON.parse(localStorage.getItem('persist:root')).admin)?.current_user?.user?.isAdmin
+  const current_user = JSON.parse(JSON.parse(localStorage.getItem('persist:root')).admin)?.current_user
   return (
     <div className="App">
       <Router>
         <Switch>
           <Route path='/login'>
-            {admin ? <Redirect to='/' /> : <Login />}
+            {current_user ? <Redirect to='/' /> : <Login />}
           </Route>
-          {admin && <><Topbar />
+          {current_user && <><Topbar />
             <HomeContainer>
               <SideBar />
               <Content>
                 <Route exact path='/'>
-                  <Home />
+                  {current_user ? <Home /> : <Login />}
+
                 </Route>
                 <Route path='/users'>
                   <UserList users_data={users_data} setUsersData={setUsersData} />

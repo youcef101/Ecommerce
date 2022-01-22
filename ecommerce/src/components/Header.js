@@ -9,8 +9,10 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { axiosInstance } from '../axios';
 import { FilterProducts } from '../Redux/searchSlice';
+import { LogoutCall } from '../Redux/apiCalls';
 function Header() {
-    const quantity = useSelector(state => state.cart.quantity)
+    const cart = useSelector(state => state.cart)
+
     const user = useSelector(state => state.user.current_user)
     const suggestions = useSelector(state => state.search.suggestions)
     const dispatch = useDispatch()
@@ -43,7 +45,9 @@ function Header() {
         dispatch(FilterProducts(matches))
         setSearch(e.target.value)
     }
-    // console.log(matched_product)
+    const Logout = () => {
+        LogoutCall(dispatch)
+    }
     return (
         <Container>
             <HeaderContainer>
@@ -81,32 +85,35 @@ function Header() {
                 </MiddleContainer>
                 <RightContainer>
                     <MenuItem>
-                        {/*  <SelectContainer>
-                            <Lang>EN</Lang>
-                            <Arrow>
-                                <ArrowDropDownIcon fontSize="small" />
-                            </Arrow>
-                        </SelectContainer> */}
+
                         {!user ? <>
                             <RegisterBtn>
-                                <span>REGISTER</span>
+                                <Link to='/register'>
+                                    <span>REGISTER</span>
+                                </Link>
                             </RegisterBtn>
                             <LoginBtn>
-                                <span>LOGIN</span>
+                                <Link to='/login'>
+                                    <span>LOGIN</span>
+                                </Link>
                             </LoginBtn>
                         </> :
-                            <LogoutBtn>
+                            <LogoutBtn onClick={Logout}>
                                 <span>LOGOUT</span>
                             </LogoutBtn>
                         }
 
                         <CartBtn>
                             <Link to='/cart'>
-                                <Badge badgeContent={quantity} color="primary">
-
-                                    <ShoppingCartOutlinedIcon fontSize="small" />
-
-                                </Badge>
+                                {cart.products.length === 0 ? <>
+                                    <Badge badgeContent={0} color="primary">
+                                        <ShoppingCartOutlinedIcon fontSize="small" />
+                                    </Badge>
+                                </> :
+                                    <Badge badgeContent={cart.quantity} color="primary">
+                                        <ShoppingCartOutlinedIcon fontSize="small" />
+                                    </Badge>
+                                }
                             </Link>
                         </CartBtn>
                     </MenuItem>
@@ -190,6 +197,10 @@ align-items:center;
 `
 const RegisterBtn = styled.div`
 cursor:pointer;
+a{
+    text-decoration:none;
+    color:black
+}
 `
 const LoginBtn = styled(RegisterBtn)``
 const LogoutBtn = styled(RegisterBtn)``

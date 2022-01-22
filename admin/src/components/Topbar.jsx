@@ -6,9 +6,13 @@ import LanguageIcon from '@material-ui/icons/Language';
 import Badge from '@material-ui/core/Badge';
 import ExitToAppOutlinedIcon from '@material-ui/icons/ExitToAppOutlined';
 import { useDispatch } from 'react-redux';
+import { LOGOUT } from '../Redux/adminSlice';
 
 function Topbar() {
-
+    const dispatch = useDispatch()
+    const SignOut = () => {
+        dispatch(LOGOUT())
+    }
     return (
         <Container>
 
@@ -39,7 +43,7 @@ function Topbar() {
                     </ProfileImage>
                     <LogoutContainer >
                         <LogoutIc><ExitToAppOutlinedIcon fontSize='small' /></LogoutIc>
-                        <Logout>
+                        <Logout onClick={SignOut}>
                             <span>LOGOUT</span>
                         </Logout>
                     </LogoutContainer>

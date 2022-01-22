@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 function CategoryItem({ item }) {
+    const PF = 'http://localhost:8001/public/uploads/'
     return (
         <Container>
             <ImageContainer>
-                <img src={item.categoryImage} alt='' />
+                <img src={PF + item?.categoryImage} alt='' />
             </ImageContainer>
             <Info>
                 <Title>{item.title}</Title>
@@ -20,7 +21,6 @@ function CategoryItem({ item }) {
 
 export default CategoryItem
 const Container = styled.div`
-
 margin:5px;
 display:flex;
 position:relative;
@@ -28,11 +28,11 @@ position:relative;
 const ImageContainer = styled.div`
 width:100%;
 height:100%;
-//background-color:#f5fbfd;
+background-color:#f5fbfd;
 img{
-width:23vw;
-height:400px;
-object-fit:cover;
+width:100%;
+height:300px;
+object-fit:contain;
 }
 
 `
