@@ -4,6 +4,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { Link } from 'react-router-dom';
+import { Ipad, IpadMini, Medium, mobile, mobileMax } from '../responsive';
 function Product({ product }) {
     const PF = 'http://localhost:8001/public/uploads/'
     return (
@@ -49,21 +50,30 @@ const Container = styled.div`
 &:hover ${IconContainer}{
     opacity:1;
 }
+
 `
 const ProductContainer = styled.div`
-width:100%;
+
 display:flex;
 position:relative;
+
 `
 
 const ImageContainer = styled.div`
+
 margin:10px;
 margin-bottom:5px;
 background-color:#f5fbfd;
+${mobile({ margin: '10px 0px' })}
 img{
 width:100%;
 height:200px;
 object-fit:contain;
+${mobile({ height: '350px', width: '380px' })}
+${Medium({ height: '250px' })}
+${Ipad({ height: '250px' })};
+${mobileMax({ height: '230px' })};
+${IpadMini({ height: '350px' })};
 }
 
 `

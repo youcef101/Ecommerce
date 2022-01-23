@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import SignUpFormValidation from '../authValidationForm/RegisterValidation'
 import { axiosInstance } from '../axios.js'
+import { Ipad, IpadMax, IpadMini, Medium, MediumMax, MediumMin, mobile, mobileMax, mobileMini } from '../responsive'
 
 function Register() {
     const history = useHistory()
@@ -51,49 +52,31 @@ function Register() {
     }
     return (
         <Container>
-            <RegisterContainer>
-
-                <InputContainer>
-
-                    <InputCon>
-                        <FirstNameInput ref={firstNameRef} name="firstName" value={values.firstName} onChange={handleChange} placeholder="FirstName" type="text" />
-                        {errors.firstName && <Errors><span>{errors.firstName}</span></Errors>}
-                    </InputCon>
-                    <InputCon>
-                        <LastNameInput ref={lastNameRef} name="lastName" value={values.lastName} onChange={handleChange} placeholder="LastName" type="text" />
-                        {errors.lastName && <Errors><span>{errors.lastName}</span></Errors>}
-                    </InputCon>
-                    <InputCon>
-                        <EmailInput ref={emailRef} name="email" value={values.email} onChange={handleChange} placeholder="Email" type="email" />
-                        {errors.email && <Errors><span>{errors.email}</span></Errors>}
-                    </InputCon>
-                    <InputCon>
-                        <PasswordInput ref={passwordRef} name="password" value={values.password} onChange={handleChange} placeholder="Password" type="password" />
-                        {errors.password && <Errors><span>{errors.password}</span></Errors>}
-                    </InputCon>
-                    <InputCon>
-                        <PasswordConfirmInput ref={passwordConfirmRef} name="password_confirm" value={values.password_confirm} onChange={handleChange} placeholder="Password Confirm" type="password" />
-                        {errors.password_confirm && <Errors><span>{errors.password_confirm}</span></Errors>}
-                    </InputCon>
+            <Wrapper>
+                <Title>CREATE AN ACCOUNT</Title>
+                <Form>
+                    <Input placeholder="first Name" type='text' ref={firstNameRef} name="firstName" value={values.firstName} onChange={handleChange} />
+                    <Input placeholder="last name" type='text' ref={lastNameRef} name="lastName" value={values.lastName} onChange={handleChange} />
+                    <Input placeholder="email" type='email' ref={emailRef} name="email" value={values.email} onChange={handleChange} />
+                    <Input placeholder="password" type='password' ref={passwordRef} name="password" value={values.password} onChange={handleChange} />
+                    <Input placeholder="confirm password" type='password' ref={passwordConfirmRef} name="password_confirm" value={values.password_confirm} onChange={handleChange} />
                     <Agreement>
                         By creating an account, I consent to the processing of my personal
                         data in accordance with the <b>PRIVACY POLICY</b>
                     </Agreement>
-                    <RegisterBtn onClick={Register}>
-                        REGISTER
-                    </RegisterBtn>
+                    <Button onClick={Register}>CREATE</Button>
                     <LoginContainer>
                         <span>Already have an account ? <Link to="/login">Login</Link></span>
                     </LoginContainer>
-
-                </InputContainer>
-            </RegisterContainer>
+                </Form>
+            </Wrapper>
 
         </Container>
     )
 }
 
 export default Register
+
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -104,61 +87,57 @@ const Container = styled.div`
     url("https://images.pexels.com/photos/6984661/pexels-photo-6984661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
       center;
   background-size: cover;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-`
-const RegisterContainer = styled.div`
-background-color:white;
-width:40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-`
-const InputContainer = styled.div`
-width:100%;
-display:flex;
-margin-top:5px;
-margin-bottom:5px;
-margin-left:5px;
-margin-right:5px;
-justify-content:center;
-flex-direction:column;
-`
+const Wrapper = styled.div`
+  min-width: 40%;
+  padding: 20px;
+  background-color: white;
+  
+${mobileMini({ minWidth: "90%", maxWidth: "95%" })};
 
-const FirstNameInput = styled.input`
-width:100%;
-margin-bottom:5px;
-flex:1;
-border-radius:4px;
-background-color: #f2f2f2;
-height:40px;
-border:1px solid #000;
-&:focus{
-    outline:none;
-}
-`
-const LastNameInput = styled(FirstNameInput)``
-const EmailInput = styled(FirstNameInput)`
-width:100%;
-`
-const PasswordInput = styled(FirstNameInput)``
-const PasswordConfirmInput = styled(FirstNameInput)``
-const Agreement = styled.div`
-margin:10px;
-`
-const RegisterBtn = styled.div`
-height:40px;
-border-radius:4px;
-cursor:pointer;
-background-color:teal;
-color:white;
-font-size:18px;
-font-weight:500;
-display:flex;
-align-items:center;
-justify-content:center;
-width:20%;
-margin:5px;
-`
+`;
+
+const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 300;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction:column;
+  flex-wrap: wrap;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  min-width: 40%;
+  margin: 20px 10px 0px 0px;
+  padding: 10px;
+  &:focus{
+      outline:none;
+  }
+`;
+
+const Agreement = styled.span`
+  font-size: 12px;
+  margin: 20px 0px;
+`;
+
+const Button = styled.button`
+  width: 40%;
+  border: none;
+  padding: 15px 20px;
+  background-color: teal;
+  color: white;
+  cursor: pointer;
+  &:hover{
+      background-color:#00e6e6;
+  }
+`;
 const LoginContainer = styled.div`
 margin:5px;
 a{
@@ -168,20 +147,3 @@ a{
     cursor:pointer;
 }
 `
-const Errors = styled.div`
-display:flex;
-align-items:start;
-justify-content:start;
-margin-top:-2px;
-margin-bottom:3px;
-padding-left:15px;
-span{
-color:red;
-font-size:11px;
-text-align:start;
-}
-`
-const InputCon = styled.div`
-width:96%;
-margin:2px;
-` 

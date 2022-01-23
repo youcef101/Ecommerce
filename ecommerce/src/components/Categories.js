@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { axiosInstance } from '../axios'
 import { categories } from '../data'
+import { Ipad, IpadMax } from '../responsive'
 import CategoryItem from './CategoryItem'
 function Categories() {
     const [categories, setCategories] = useState([])
@@ -45,4 +46,6 @@ display:flex;
 padding:15px;
 justify-content:space-between;
 flex-wrap:wrap;
+${Ipad({ justifyContent: 'center' })};
+${IpadMax({ justifyContent: 'center' })};
 `

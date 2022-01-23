@@ -40,5 +40,5 @@ function Home() {
 
 export default Home
 const Container = styled.div`
-
+overflow-x:hidden;
 `

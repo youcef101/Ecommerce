@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { AddCart } from '../Redux/cartSlice'
 import HtmlReactParser from 'html-react-parser'
 import ProductSlider from '../components/ProductSlider'
+import { Ipad, IpadMax, MediumMax, mobile } from '../responsive'
 
 function ProductDetail() {
     const PF = 'http://localhost:8001/public/uploads/'
@@ -149,6 +150,7 @@ function ProductDetail() {
 export default ProductDetail
 const Container = styled.div`
 overflow:hidden;
+
 `
 const DetailContainer = styled.div`
 margin:15px;
@@ -156,6 +158,9 @@ display:flex;
 justify-content:space-around;
 align-items:flex-start;
 width:100%;
+${mobile({ flexDirection: 'column' })};
+${MediumMax({ flexDirection: 'column' })};
+
 `
 const ProductImg = styled.div`
 width:40%;
@@ -163,6 +168,10 @@ margin:15px;
 img{
     height:500px;
     width:35vw;
+    ${mobile({ width: '80vw', height: '350px', objectFit: 'cover' })};
+    ${Ipad({ width: '40vw', height: '350px', objectFit: 'cover' })};
+     ${IpadMax({ width: '40vw', height: '350px', objectFit: 'cover' })};
+     ${MediumMax({ width: '80vw', height: '350px', objectFit: 'contain' })};
 }
 `
 const ProductInfoContainer = styled.div`
@@ -170,6 +179,10 @@ width:60%;
 margin:10px;
 display:flex;
 flex-direction:column;
+${mobile({ width: '100%' })};
+${MediumMax({ width: '100%' })};
+${Ipad({ width: '100%', })};
+${IpadMax({ width: '100%' })};
 `
 const ProductTitle = styled.div`
 font-size:25px;
@@ -180,6 +193,10 @@ margin-bottom:20px;
 font-size:18px;
 max-width:40vw;
 text-align:justify;
+${mobile({ maxWidth: '80vw' })};
+${MediumMax({ maxWidth: '90vw' })};
+${Ipad({ maxWidth: '90vw', })};
+${IpadMax({ maxWidth: '90vw' })};
 `
 const ProductPrice = styled.div`
 font-size:25px;

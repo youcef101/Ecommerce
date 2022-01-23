@@ -13,6 +13,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { DeleteCart } from '../Redux/cartSlice'
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import { DeleteCartProduct } from '../Redux/apiCalls'
+import { IpadMax, IpadMini, MediumMax, MediumMin, mobile, mobileMax, Surface } from '../responsive'
 
 function Cart() {
     const PF = 'http://localhost:8001/public/uploads/'
@@ -129,10 +130,10 @@ function Cart() {
                     <OrderCheckout>
                         <Summary>
                             <SumTitle>ORDER SUMMARY</SumTitle>
-                            <SubTotal><span>SubTotal</span><span>$ {cart.total}</span></SubTotal>
-                            <Estimated><span>Estimated Shipping</span><span>$ 5.90</span></Estimated>
-                            <Shipping><span>Shipping Discount</span><span>-$ 5.90</span></Shipping>
-                            <Total><span>Total</span><span>$ {cart.total}</span></Total>
+                            <SubTotal><span>SubTotal</span><span style={{ whiteSpace: 'nowrap' }}>$ {cart.total}</span></SubTotal>
+                            <Estimated><span>Estimated Shipping</span><span style={{ whiteSpace: 'nowrap' }}>$ 5.90</span></Estimated>
+                            <Shipping><span>Shipping Discount</span><span style={{ whiteSpace: 'nowrap' }}>-$ 5.90</span></Shipping>
+                            <Total><span>Total</span><span style={{ whiteSpace: 'nowrap' }}>$ {cart.total}</span></Total>
                             <StripeCheckout
                                 name='E-SHOP'
                                 /* image='' */
@@ -159,9 +160,12 @@ function Cart() {
 }
 
 export default Cart
-const Container = styled.div``
+const Container = styled.div`
+overflow:hidden
+`
 const CartContainer = styled.div`
 width:100%;
+
 `
 const Title = styled.div`
 margin-top:20px;
@@ -174,10 +178,26 @@ margin:20px;
 margin-top:50px;
 display:flex;
 justify-content:space-between;
+//align-items:center;
+@media only screen and (min-width:644px){
+    align-items:center;
+}
+@media only screen and (min-width:790px){
+    align-items:center;
+}
+@media only screen and (min-width:993px){
+    align-items:center;
+}
+@media only screen and (min-width:1200px){
+    align-items:center;
+}
 a{
     text-decoration:none;
     color:black;
 }
+${mobile({ flexDirection: 'column' })}
+${mobileMax({ flexDirection: 'column' })}
+${MediumMin({ flexDirection: 'column' })}
 `
 const Shopping = styled.div`
 background-color:#f2f2f2;
@@ -188,19 +208,31 @@ display:flex;
 align-items:center;
 padding:10px;
 justify-content:center;
+font-size:15px;
 &:hover{
     background-color:#d9d9d9;
 }
+
 `
 const Action = styled.div`
 display:flex;
+${mobileMax({ justifyContent: 'space-between' })}
+${MediumMin({ justifyContent: 'space-between' })}
 `
 const Bag = styled.div`
 margin:10px;
 a{
     color:#000;
+    font-size:14px;
     cursor:pointer;
-   
+    @media only screen and (min-width:683px){
+    display:none;
+}
+@media only screen and (min-width:1000px){
+    display:flex;
+}
+}
+  
 }
 `
 const Wishlist = styled(Bag)``
@@ -210,6 +242,9 @@ color:white;
 &:hover{
     background-color:#262626;
 }
+${mobile({ display: 'none' })}
+${mobileMax({ display: 'none' })}
+${MediumMin({ display: 'none' })}
 `
 const MiddleContainer = styled.div`
 display:flex;
@@ -220,6 +255,9 @@ const LeftContainer = styled.div`
 display:flex;
 align-items:center;
 width:45%;
+${mobile({ width: '80%' })}
+${mobileMax({ width: '80%' })}
+${MediumMin({ width: '80%' })}
 `
 const ProductImg = styled.div`
 width:50%;
@@ -227,12 +265,20 @@ img{
 width:100%;
 height:200px;
 object-fit:contain;
+${mobile({ height: '200px' })}
+${mobileMax({ height: '250px' })}
+${MediumMin({ height: '300px' })}
 }
 `
 const ProductInfo = styled.div`
 width:50%;
 `
-const ProductName = styled.div``
+const ProductName = styled.div`
+width:'100%';
+${mobile({ width: '100%' })}
+${mobileMax({ width: '100%' })}
+${MediumMin({ width: '100%' })}
+`
 const Color = styled.div`
 display:flex;
 b{
@@ -291,14 +337,23 @@ width:95%;
 const Middle = styled.div`
 display:flex;
 width:100%;
+${mobile({ flexDirection: 'column' })}
+${mobileMax({ flexDirection: 'column' })}
+${MediumMin({ flexDirection: 'column' })}
 `
 const CartProduct = styled.div`
 flex:1;
 width:70%;
+${mobile({ width: '100%' })}
+${mobileMax({ width: '100%' })}
+${MediumMin({ width: '100%' })}
 `
 const OrderCheckout = styled.div`
 width:25%;
 margin:10px;
+${mobile({ width: '95%' })}
+${mobileMax({ width: '95%' })}
+${MediumMin({ width: '95%' })}
 `
 const Summary = styled.div`
 width:100%;
@@ -314,11 +369,13 @@ color:gray;
 font-size:25px;
 margin-bottom:20px;
 margin-top:15px;
+${MediumMax({ fontSize: '20px' })}
 `
 const SubTotal = styled.div`
 margin-bottom:25px;
 span{
-    font-size:17px
+    font-size:17px;
+    ${MediumMax({ fontSize: '13px' })}
 }
 margin-left:5px;
 margin-right:5px;
@@ -340,8 +397,16 @@ display:flex;
 align-items:center;
 padding:10px;
 justify-content:center;
+font-size:15px;
 &:hover{
     background-color:#d9d9d9;
-}
+};
+@media only screen and (max-width:1112px){
+    width:80%;
+    font-size:13px
+};
+${MediumMax({ width: '80%', fontSize: '13px' })}
+${IpadMini({ width: '80%', fontSize: '13px' })}
+${IpadMax({ width: '80%', fontSize: '13px' })}
 `
 const DeleteItem = styled.div``

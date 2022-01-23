@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import styled from 'styled-components';
+import { Ipad, IpadMax, Medium, mobile } from '../responsive';
 
 function HomeSlider() {
     const settings = {
@@ -106,7 +107,10 @@ img{
     width:100%;
     height:70vh;
     margin:0px 2px;
-    //object-fit:contain;
+    ${mobile({ height: '30vh', objectFit: 'contain' })};
+    ${Medium({ height: '40vh' })};
+    ${Ipad({ height: '40vh' })};
+    ${IpadMax({ height: '40vh' })};
 
 }
 `

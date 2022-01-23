@@ -9,6 +9,7 @@ import {
     Room,
     Twitter,
 } from "@material-ui/icons";
+import { Medium, mobile } from '../responsive';
 function Footer() {
     return (
         <Container>
@@ -88,9 +89,13 @@ display:flex;
 justify-content:space-between;
 height:40vh;
 margin:30px;
+${mobile({ flexDirection: 'column' })};
+${Medium({ flexDirection: 'column' })}
 `
 const LeftContainer = styled.div`
 width:30%;
+${mobile({ width: '100%' })};
+${Medium({ width: '100%' })}
 `
 const Title = styled.div`
 font-size:30px;
@@ -121,6 +126,8 @@ background-color:#${(props) => props.color};
 `
 const MiddleContainer = styled.div`
 width:30%;
+${mobile({ width: '100%' })}.
+${Medium({ width: '100%' })}
 `
 const UsefulLink = styled.div`
 font-size:25px;
@@ -136,17 +143,21 @@ cursor:pointer;
 margin:5px;
 font-weight:400;
 font-size:20px;
+
 `
 const Left = styled.div`
 display:flex;
 flex-direction:column;
 width:50%;
+${Medium({ marginRight: '100px', })}
 `
 const Right = styled(Left)``
 const RightContainer = styled.div`
 width:30%;
 display:flex;
 flex-direction:column;
+${mobile({ width: '100%' })};
+${Medium({ width: '100%' })}
 `
 const Contact = styled.div`
 font-size:25px;

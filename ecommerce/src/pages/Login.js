@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import SignInValidation from '../authValidationForm/LoginValidation'
 import { useDispatch } from 'react-redux'
 import { LoginCall } from '../Redux/apiCalls'
+import { Ipad, IpadMax, IpadMini, Medium, MediumMax, MediumMin, mobile, mobileMax, mobileMini } from '../responsive'
 
 
 function Login() {
@@ -35,84 +36,89 @@ function Login() {
 
     return (
         <Container>
-            <LoginContainer>
-                <InputContainer>
-                    <InputCon>
-                        <EmailInput ref={emailRef} name='email' type='email' onChange={handleChange} placeholder='Enter Your Email' />
-                        {errors.email && <Errors><span>{errors.email}</span></Errors>}
-                    </InputCon>
-                    <InputCon>
-                        <PasswordInput ref={passwordRef} name='password' onChange={handleChange} type='password' placeholder='Enter Your Password' />
-                        {errors.password && <Errors><span>{errors.password}</span></Errors>}
-                    </InputCon>
-                    <LoginBtn onClick={Login}>
-                        LOGIN
-                    </LoginBtn>
+            <Wrapper>
+                <Title>SIGN IN</Title>
+                <Form>
+                    <Input ref={emailRef} name='email' type='email' onChange={handleChange} placeholder='email' />
+                    <Input ref={passwordRef} name='password' onChange={handleChange} type='password' placeholder='password' />
+                    <Button onClick={Login}>LOGIN</Button>
+                    <Lien>DO NOT YOU REMEMBER THE PASSWORD?</Lien>
                     <BottomContainer>
                         <span>Dont't have an account ? <Link to="/register">Register</Link></span>
                     </BottomContainer>
-                </InputContainer>
-            </LoginContainer>
+                </Form>
+            </Wrapper>
+
 
         </Container>
     )
 }
 
 export default Login
+
 const Container = styled.div`
- width: 100vw;
+  width: 100vw;
   height: 100vh;
   background: linear-gradient(
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
     ),
-    url("https://images.pexels.com/photos/6984661/pexels-photo-6984661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
+    url("https://images.pexels.com/photos/6984650/pexels-photo-6984650.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
       center;
   background-size: cover;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-`
-const LoginContainer = styled.div`
-background-color:white;
-width:40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-`
-const InputContainer = styled.div`
-width:97%;
-display:flex;
-flex-direction:column;
-margin-bottom:10px;
-margin-top:5px; 
-`
-const EmailInput = styled.input`
-width:100%;
-border-radius:4px;
-background-color: #f2f2f2;
-height:40px;
-border:1px solid #000;
-&:focus{
-    outline:none;
-}
+const Wrapper = styled.div`
+  min-width: 25%;
+  padding: 20px;
+  background-color: white;
+  ${mobileMini({ minWidth: "90%", maxWidth: "95%" })}
+`;
 
-`
-const PasswordInput = styled(EmailInput)``
-const LoginBtn = styled.div`
-height:40px;
-border-radius:4px;
-cursor:pointer;
-background-color:teal;
-color:white;
-font-size:18px;
-font-weight:500;
-display:flex;
-align-items:center;
-justify-content:center;
-width:20%;
-margin:5px;
-`
+const Title = styled.h1`
+  font-size: 24px;
+  font-weight: 300;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  min-width: 40%;
+  margin: 10px 0;
+  padding: 10px;
+  &:focus{
+      outline:none
+    }
+`;
+
+const Button = styled.button`
+  width: 40%;
+  border: none;
+  padding: 15px 20px;
+  background-color: teal;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 10px;
+   &:hover{
+      background-color:#00e6e6;
+  }
+`;
+
+const Lien = styled.a`
+  margin: 5px 0px;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+`;
 const BottomContainer = styled.div`
-margin:5px;
+white-space:nowrap;
 a{
     text-decoration:none;
     font-size:18px;
@@ -120,20 +126,3 @@ a{
     cursor:pointer;
 }
 `
-const Errors = styled.div`
-display:flex;
-align-items:start;
-justify-content:start;
-margin-top:-2px;
-//margin-bottom:3px;
-padding-left:15px;
-span{
-color:red;
-font-size:11px;
-text-align:start;
-}
-`
-const InputCon = styled.div`
-width:100%;
-margin:5px;
-` 

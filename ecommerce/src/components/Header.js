@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { axiosInstance } from '../axios';
 import { FilterProducts } from '../Redux/searchSlice';
 import { LogoutCall } from '../Redux/apiCalls';
+import { Ipad, IpadMax, Medium, MediumMin, mobile } from '../responsive';
 function Header() {
     const cart = useSelector(state => state.cart)
 
@@ -140,18 +141,23 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 z-index:100;
+
 `
 const LogoContainer = styled.div`
 a{text-decoration:none;color:black}
 cursor:pointer;
-width:40%;
+width:100%;
+
 span{
+    width:100%;
     font-weight:700;
     font-size:20px;
+    ${mobile({ fontSize: '18px', fontWeight: '500' })};
+    ${Medium({ fontSize: '18px', fontWeight: '700' })}
 }
 `
 const MiddleContainer = styled.div`
-width:30%;
+width:40%;
 
 `
 const SearchContainer = styled.div`
@@ -163,6 +169,7 @@ height:30px;
 padding-left:10px;
 padding-right:10px;
 position:relative;
+
 `
 const SearchInput = styled.input`
 width:100%;
@@ -179,33 +186,30 @@ align-items:center;
 cursor:pointer;
 `
 const RightContainer = styled.div`
-width:20%;
+width:30%;
+display:flex;
+justify-content:space-around;
 `
 const MenuItem = styled.div`
 display:flex;
 justify-content:space-evenly;
 `
-const SelectContainer = styled.div`
-display:flex;
-align-items:center;
-cursor:pointer;
-`
-const Lang = styled.div``
-const Arrow = styled.div`
-display:flex;
-align-items:center;
-`
+
 const RegisterBtn = styled.div`
+margin:0px 5px;
+
 cursor:pointer;
 a{
     text-decoration:none;
-    color:black
+    color:black;
+   font-size:13px;
 }
 `
 const LoginBtn = styled(RegisterBtn)``
 const LogoutBtn = styled(RegisterBtn)``
 const CartBtn = styled.div`
 cursor:pointer;
+margin-right:20px;
 a{
     color:black;
 }
@@ -228,6 +232,9 @@ cursor:pointer;
 }
 `
 const ProductsContainer = styled.div`
+${mobile({ display: 'none' })};
+${Medium({ display: 'none' })};
+${MediumMin({ marginRight: '10px' })}
 width:40%;
 cursor:pointer;
 a{
@@ -243,5 +250,8 @@ const LeftContainer = styled.div`
 width:30%;
 display:flex;
 align-items:center;
+${Ipad({ width: '25%' })};
+${IpadMax({ width: '25%' })};
+
 `
 

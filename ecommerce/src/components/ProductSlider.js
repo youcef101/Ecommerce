@@ -11,7 +11,6 @@ function ProductSlider({ products }) {
 
 
   const PreviousBtn = (props) => {
-    // console.log(props);
     const { className, onClick } = props;
     return (
       <div className={className} onClick={onClick}>
@@ -34,15 +33,45 @@ function ProductSlider({ products }) {
     speed: 500,
     slidesToShow: 6,
     slidesToScroll: 6,
+    prevArrow: <PreviousBtn />,
+    nextArrow: <NextBtn />,
     autoplay: true,
+    responsive: [
+      {
+        breakpoint: 426,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        },
+      },
+      {
+        breakpoint: 769,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4
+        },
+      },
+      {
+        breakpoint: 820,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4
+        },
+      },
+      {
+        breakpoint: 1025,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 5
+        },
+      },
+    ]
 
   };
   return (
     <Container>
       <SliderContainer
         {...settings}
-        prevArrow={<PreviousBtn />}
-        nextArrow={<NextBtn />}
       >
         {products &&
           products.map(product =>
@@ -60,6 +89,7 @@ margin:50px 0px;
 `
 const SliderContainer = styled(Slider)`
 background-color: #f2f2f2;
+
 &:focus{
     outline:none;
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { mobile } from '../responsive'
 
 function Announcements() {
     return (
@@ -19,15 +20,15 @@ const Container = styled.div`
 
 `
 const AnnouncementContainer = styled.div`
-//width:100%;
-text-align:center;
+/* text-align:center;
 span{
     color:white;
     font-weight:500;
     font-size:14px;
-}
+} */
 img{
     width:100%;
     height:50px;
+    ${mobile({ height: '35px' })}
 }
 `

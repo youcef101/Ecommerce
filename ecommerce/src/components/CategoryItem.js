@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { Ipad, IpadMax, IpadMini, Medium, MediumMax, MediumMin, mobile, mobileMax, Surface } from '../responsive'
 
 function CategoryItem({ item }) {
     const PF = 'http://localhost:8001/public/uploads/'
@@ -24,6 +25,10 @@ const Container = styled.div`
 margin:5px;
 display:flex;
 position:relative;
+${mobile({ margin: '5px 0px' })};
+${Medium({ width: '100%' })}
+
+
 `
 const ImageContainer = styled.div`
 width:100%;
@@ -33,6 +38,14 @@ img{
 width:100%;
 height:300px;
 object-fit:contain;
+${mobile({ height: '400px' })};
+${Ipad({ height: '300px' })};
+${IpadMax({ height: '300px' })};
+
+${mobileMax({ height: '200px' })};
+${MediumMax({ height: '280px' })};
+${MediumMin({ height: '250px' })};
+${Surface({ height: '200px' })};
 }
 
 `
