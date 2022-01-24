@@ -48,7 +48,7 @@ function AllProducts() {
 
 export default AllProducts
 const Container = styled.div`
-
+overflow:hidden;
 `
 const SearchedProducts = styled.div`
 display:flex;

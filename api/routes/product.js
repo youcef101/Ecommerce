@@ -2,11 +2,11 @@ import express from 'express'
 import Product from '../models/Product.js'
 import Category from '../models/Category.js'
 import { verifyTokens } from '../utils/authTokens.js'
-import { upload } from '../utils/upload.js'
 const router = express.Router()
 
 router.get('/', (req, res) => {
     res.status(200).send('hello from productroute!!!')
+
 })
 
 //add product

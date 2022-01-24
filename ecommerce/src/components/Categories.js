@@ -1,33 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { axiosInstance } from '../axios'
-import { categories } from '../data'
+import { getLatestCategory } from '../Redux/apiCalls'
 import { Ipad, IpadMax } from '../responsive'
 import CategoryItem from './CategoryItem'
 function Categories() {
-    const [categories, setCategories] = useState([])
-    /*   useEffect(async () => {
-          try {
-              const res = await axiosInstance.get(`/category/all`)
-              const data = await res.data
-              setCategories(data)
-          } catch (err) {
-              console.log(err)
-          }
-  
-      }, []) */
+    const categories = useSelector(state => state.product.latest_category)
+    const dispatch = useDispatch()
     useEffect(() => {
-        const getLatestCategory = async () => {
-            try {
-                const res = await axiosInstance.get(`/category/get/?new=true`)
-                const data = await res.data
-                setCategories(data)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        getLatestCategory()
-    }, [])
+        getLatestCategory(dispatch)
+    }, [dispatch])
     //console.log(categories)
     return (
         <Container>

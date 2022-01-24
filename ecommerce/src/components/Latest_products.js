@@ -1,21 +1,18 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { axiosInstance } from '../axios'
+import { getLatestProduct } from '../Redux/apiCalls'
 import Product from './Product'
 function Latest_products() {
-    const [latest_products, setLatestProducts] = useState([])
-    useEffect(async () => {
-        try {
-            const res = await axiosInstance.get(`/product/get/latest/?new=true`)
-            const data = await res.data
-            setLatestProducts(data)
-        } catch (err) {
-            console.log(err)
-        }
-    }, [])
-    //console.log(random_products)
+    const dispatch = useDispatch()
+    const latest_products = useSelector(state => state.product.latest_products)
+    useEffect(() => {
+        getLatestProduct(dispatch)
+    }, [dispatch])
+    //console.log(latest_products)
     return (
         <Container>
             {latest_products &&

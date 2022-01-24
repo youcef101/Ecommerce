@@ -6,7 +6,8 @@ import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { Link } from 'react-router-dom';
 import { Ipad, IpadMini, Medium, mobile, mobileMax } from '../responsive';
 function Product({ product }) {
-    const PF = 'http://localhost:8001/public/uploads/'
+    const PF = 'https://e-shop-mern-clone.herokuapp.com/public/uploads/'
+
     return (
         <Container>
             <ProductContainer>

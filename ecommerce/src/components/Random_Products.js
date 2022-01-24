@@ -3,18 +3,15 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { axiosInstance } from '../axios'
+import { useDispatch, useSelector } from 'react-redux'
 import Product from './Product'
+import { getRandomProduct } from '../Redux/apiCalls'
 function Random_Products() {
-    const [random_products, setRandomProducts] = useState('')
-    useEffect(async () => {
-        try {
-            const res = await axiosInstance.get(`/product/random/all/d`)
-            const data = await res.data
-            setRandomProducts(data)
-        } catch (err) {
-            console.log(err)
-        }
-    }, [])
+    const dispatch = useDispatch()
+    const random_products = useSelector(state => state.product.picked_products)
+    useEffect(() => {
+        getRandomProduct(dispatch)
+    }, [dispatch])
     //console.log(random_products)
     return (
         <Container>

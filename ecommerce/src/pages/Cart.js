@@ -16,7 +16,7 @@ import { DeleteCartProduct } from '../Redux/apiCalls'
 import { IpadMax, IpadMini, MediumMax, MediumMin, mobile, mobileMax, Surface } from '../responsive'
 
 function Cart() {
-    const PF = 'http://localhost:8001/public/uploads/'
+    const PF = 'https://e-shop-mern-clone.herokuapp.com/public/uploads/'
     const STRIPE_PUBLIC_KEY = 'pk_test_51KBMyHFWL49iTtC4ICYYoBkDwQsdALHlfw9r3Uz2FSJk4ekxAgZdaIFnuaXW5EB60jDcxSUmTYVInMNxRvNtysS400X91avrQ3'
     const cart = useSelector(state => state.cart)
     const history = useHistory()

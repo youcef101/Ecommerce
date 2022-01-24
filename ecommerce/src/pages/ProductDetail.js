@@ -15,7 +15,7 @@ import ProductSlider from '../components/ProductSlider'
 import { Ipad, IpadMax, MediumMax, mobile } from '../responsive'
 
 function ProductDetail() {
-    const PF = 'http://localhost:8001/public/uploads/'
+    const PF = 'https://e-shop-mern-clone.herokuapp.com/public/uploads/'
     const { productId } = useParams()
     const dispatch = useDispatch()
     const [quantity, setQuantity] = useState(1)

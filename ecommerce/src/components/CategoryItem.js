@@ -4,18 +4,21 @@ import styled from 'styled-components'
 import { Ipad, IpadMax, IpadMini, Medium, MediumMax, MediumMin, mobile, mobileMax, Surface } from '../responsive'
 
 function CategoryItem({ item }) {
-    const PF = 'http://localhost:8001/public/uploads/'
+    const PF = 'https://e-shop-mern-clone.herokuapp.com/public/uploads/'
+
     return (
         <Container>
-            <ImageContainer>
-                <img src={PF + item?.categoryImage} alt='' />
-            </ImageContainer>
-            <Info>
-                <Title>{item.title}</Title>
-                <Link to={`/products/${item.title}`}>
-                    <Button>SHOP NOW</Button>
-                </Link>
-            </Info>
+            {item && <>
+                <ImageContainer>
+                    <img src={PF + item.categoryImage} alt='' />
+                </ImageContainer>
+                <Info>
+                    <Title>{item.title}</Title>
+                    <Link to={`/products/${item.title}`}>
+                        <Button>SHOP NOW</Button>
+                    </Link>
+                </Info>
+            </>}
         </Container>
     )
 }

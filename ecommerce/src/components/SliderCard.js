@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 function SliderCard({ product }) {
-    const PF = 'http://localhost:8001/public/uploads/'
+    const PF = 'https://e-shop-mern-clone.herokuapp.com/public/uploads/'
     return (
         <Container>
             <Link to={`/product_detail/${product._id}`}>

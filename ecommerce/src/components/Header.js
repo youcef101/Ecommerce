@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { axiosInstance } from '../axios';
 import { FilterProducts } from '../Redux/searchSlice';
 import { LogoutCall } from '../Redux/apiCalls';
-import { Ipad, IpadMax, Medium, MediumMin, mobile } from '../responsive';
+import { Ipad, IpadMax, Medium, MediumMin, mobile, mobileMini } from '../responsive';
 function Header() {
     const cart = useSelector(state => state.cart)
 
@@ -85,39 +85,39 @@ function Header() {
                         : null}
                 </MiddleContainer>
                 <RightContainer>
-                    <MenuItem>
 
-                        {!user ? <>
-                            <RegisterBtn>
-                                <Link to='/register'>
-                                    <span>REGISTER</span>
-                                </Link>
-                            </RegisterBtn>
-                            <LoginBtn>
-                                <Link to='/login'>
-                                    <span>LOGIN</span>
-                                </Link>
-                            </LoginBtn>
-                        </> :
-                            <LogoutBtn onClick={Logout}>
-                                <span>LOGOUT</span>
-                            </LogoutBtn>
-                        }
 
-                        <CartBtn>
-                            <Link to='/cart'>
-                                {cart.products.length === 0 ? <>
-                                    <Badge badgeContent={0} color="primary">
-                                        <ShoppingCartOutlinedIcon fontSize="small" />
-                                    </Badge>
-                                </> :
-                                    <Badge badgeContent={cart.quantity} color="primary">
-                                        <ShoppingCartOutlinedIcon fontSize="small" />
-                                    </Badge>
-                                }
+                    {!user ? <>
+                        <RegisterBtn>
+                            <Link to='/register'>
+                                <span>REGISTER</span>
                             </Link>
-                        </CartBtn>
-                    </MenuItem>
+                        </RegisterBtn>
+                        <LoginBtn>
+                            <Link to='/login'>
+                                <span>LOGIN</span>
+                            </Link>
+                        </LoginBtn>
+                    </> :
+                        <LogoutBtn onClick={Logout}>
+                            <span>LOGOUT</span>
+                        </LogoutBtn>
+                    }
+
+                    <CartBtn>
+                        <Link to='/cart'>
+                            {cart.products.length === 0 ? <>
+                                <Badge badgeContent={0} color="primary">
+                                    <ShoppingCartOutlinedIcon fontSize="small" />
+                                </Badge>
+                            </> :
+                                <Badge badgeContent={cart.quantity} color="primary">
+                                    <ShoppingCartOutlinedIcon fontSize="small" />
+                                </Badge>
+                            }
+                        </Link>
+                    </CartBtn>
+
                 </RightContainer>
 
 
@@ -135,7 +135,7 @@ align-items:center;
 
 `
 const HeaderContainer = styled.div`
-width:100%;
+flex:5;
 padding:0 10px;
 display:flex;
 align-items:center;
@@ -144,12 +144,14 @@ z-index:100;
 
 `
 const LogoContainer = styled.div`
-a{text-decoration:none;color:black}
+margin:0px 10px;
+a{
+    text-decoration:none;
+    color:black
+}
 cursor:pointer;
-width:100%;
-
 span{
-    width:100%;
+   
     font-weight:700;
     font-size:20px;
     ${mobile({ fontSize: '18px', fontWeight: '500' })};
@@ -157,11 +159,11 @@ span{
 }
 `
 const MiddleContainer = styled.div`
-width:40%;
-
+flex:1;
+${mobileMini({ display: 'none' })};
+${mobile({ display: 'none' })};
 `
 const SearchContainer = styled.div`
-width:100%;
 display:flex;
 align-items:center;
 border:1px solid #000;
@@ -186,18 +188,18 @@ align-items:center;
 cursor:pointer;
 `
 const RightContainer = styled.div`
-width:30%;
+flex:1;
 display:flex;
-justify-content:space-around;
+justify-content:flex-end;
+
 `
 const MenuItem = styled.div`
 display:flex;
-justify-content:space-evenly;
+justify-content:space-between;
 `
 
 const RegisterBtn = styled.div`
 margin:0px 5px;
-
 cursor:pointer;
 a{
     text-decoration:none;
@@ -208,8 +210,8 @@ a{
 const LoginBtn = styled(RegisterBtn)``
 const LogoutBtn = styled(RegisterBtn)``
 const CartBtn = styled.div`
+margin:0px 5px;
 cursor:pointer;
-margin-right:20px;
 a{
     color:black;
 }
@@ -235,7 +237,7 @@ const ProductsContainer = styled.div`
 ${mobile({ display: 'none' })};
 ${Medium({ display: 'none' })};
 ${MediumMin({ marginRight: '10px' })}
-width:40%;
+margin:0px 10px;
 cursor:pointer;
 a{
     text-decoration:none;
@@ -247,7 +249,7 @@ a{
 
 `
 const LeftContainer = styled.div`
-width:30%;
+flex:1;
 display:flex;
 align-items:center;
 ${Ipad({ width: '25%' })};
