@@ -33,7 +33,7 @@ function CategoryList() {
             renderCell: (params) => {
                 return (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img src={PF + params.row.categoryImage} alt='' style={{ width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }} />
+                        <img src={/* PF +  */params.row.categoryImage} alt='' style={{ width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }} />
                         {params.row.title}
                     </div>
                 )

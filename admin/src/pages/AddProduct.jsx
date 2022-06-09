@@ -10,7 +10,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import HtmlReactParser from 'html-react-parser'
 import { adminRequest } from '../axios';
-
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import app from '../Firebase';
 
 function AddProduct() {
     const categories = useSelector(state => state.product.categories)
@@ -19,7 +20,7 @@ function AddProduct() {
     const [color, setColor] = useColor("hex", "#121212");
     const [product_colors, setProductColors] = useState([])
     const [product_size, setProductsSize] = useState([])
-    const [category, setCategory] = useState(categories[0]._id)
+    const [category, setCategory] = useState(categories[0]?._id)
     const arr = []
 
     useEffect(() => {
@@ -27,7 +28,7 @@ function AddProduct() {
     }, [dispatch])
 
 
-    console.log(category)
+    //console.log(category)
     //handle inputs
     const [inputs, setInputs] = useState({
         productImage: '',
@@ -84,39 +85,84 @@ function AddProduct() {
 
     const CreateProduct = async (e) => {
         e.preventDefault();
-        const newProduct = {
-            categoryId: inputs.categoryId,
-            title: inputs.title,
-            desc: addData,
-            color: product_colors,
-            size: product_size,
-            stock: inputs.stock,
-            price: inputs.price
-        }
-        if (inputs.productImage) {
-            const formData = new FormData();
-            const filename = `IMAGE-${Date.now()}` + `${inputs?.productImage?.name}`.split(' ').join('').toLowerCase()
-            formData.append('filename', filename);
-            formData.append('file', inputs.productImage);
-            newProduct.productImage = filename;
-            try {
-                await adminRequest.post('/upload', formData);
-            } catch { }
-        }
-        addProduct(newProduct, dispatch)
-        setInputs(
-            {
-                productImage: '',
-                categoryId: category,
-                title: '',
-                desc: '',
-                color: [],
-                size: [],
-                price: 0,
-                stock: 0
+        if (inputs?.productImage) {
+            const fileName = new Date().getTime() + inputs?.productImage.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, inputs?.productImage);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const newProduct = {
+                            categoryId: inputs.categoryId,
+                            title: inputs.title,
+                            desc: addData,
+                            color: product_colors,
+                            size: product_size,
+                            stock: inputs.stock,
+                            price: inputs.price,
+                            productImage: downloadURL
+                        }
+                        addProduct(newProduct, dispatch)
+                        setInputs(
+                            {
+                                productImage: '',
+                                categoryId: category,
+                                title: '',
+                                desc: '',
+                                color: [],
+                                size: [],
+                                price: 0,
+                                stock: 0
+
+                            }
+                        )
+                    });
+                }
+            );
+        } else {
+            const newProduct = {
+                categoryId: inputs.categoryId,
+                title: inputs.title,
+                desc: addData,
+                color: product_colors,
+                size: product_size,
+                stock: inputs.stock,
+                price: inputs.price,
 
             }
-        )
+            addProduct(newProduct, dispatch)
+            setInputs(
+                {
+
+                    categoryId: category,
+                    title: '',
+                    desc: '',
+                    color: [],
+                    size: [],
+                    price: 0,
+                    stock: 0
+
+                }
+            )
+        }
+
     }
 
     const deleteColor = (color) => {
@@ -138,7 +184,7 @@ function AddProduct() {
                 <SelectContainer value={category} onChange={(e) => setCategory(e.target.value)}>
                     {categories &&
                         categories.map(item => <React.Fragment key={Math.random()}>
-                            <OptionContainer name='category' value={item._id} >{item.title}</OptionContainer>
+                            <OptionContainer name='category' value={item?._id} >{item?.title}</OptionContainer>
                         </React.Fragment>)}
                 </SelectContainer>
             </InputContainer>

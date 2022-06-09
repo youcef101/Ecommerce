@@ -5,6 +5,8 @@ import PublishIcon from '@material-ui/icons/Publish';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCategoryInfo } from '../Redux/apiCalls'
 import { adminRequest } from '../axios';
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import app from '../Firebase';
 
 
 
@@ -45,21 +47,62 @@ function SingleCategory() {
 
     const EditCategory = async (e) => {
         e.preventDefault();
-        const editedCat = {
-            title: inputs.title,
+        if (inputs?.categoryImage) {
+            const fileName = new Date().getTime() + inputs?.categoryImage.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, inputs?.categoryImage);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const editedCat = {
+                            title: inputs?.title,
+                            categoryImage: downloadURL
+                        }
+                        updateCategoryInfo(categoryId, editedCat, dispatch)
+                        getCurrentCategory()
+                    });
+                }
+            );
+        } else {
+            const editedCat = {
+                title: inputs?.title,
+            }
+            updateCategoryInfo(categoryId, editedCat, dispatch)
+            getCurrentCategory()
         }
-        if (catImageRef.current.value) {
-            const formData = new FormData();
-            const filename = `IMAGE-${Date.now()}` + `${inputs.categoryImage?.name}`.split(' ').join('').toLowerCase()
-            formData.append('filename', filename);
-            formData.append('file', inputs.categoryImage);
-            editedCat.categoryImage = filename;
-            try {
-                await adminRequest.post('/upload', formData);
-            } catch { }
-        }
-        updateCategoryInfo(categoryId, editedCat, dispatch)
-        getCurrentCategory()
+
+        /*  const editedCat = {
+             title: inputs.title,
+         }
+         if (catImageRef.current.value) {
+             const formData = new FormData();
+             const filename = `IMAGE-${Date.now()}` + `${inputs.categoryImage?.name}`.split(' ').join('').toLowerCase()
+             formData.append('filename', filename);
+             formData.append('file', inputs.categoryImage);
+             editedCat.categoryImage = filename;
+             try {
+                 await adminRequest.post('/upload', formData);
+             } catch { }
+         }
+         updateCategoryInfo(categoryId, editedCat, dispatch)
+         getCurrentCategory() */
     }
 
     return (
@@ -79,7 +122,7 @@ function SingleCategory() {
 
                     <UserProfileImageContainer>
                         <UserProfileImage>
-                            <img src={PF + current_category?.categoryImage} alt='' />
+                            <img src={/* PF + */ current_category?.categoryImage} alt='' />
                         </UserProfileImage>
 
                     </UserProfileImageContainer>

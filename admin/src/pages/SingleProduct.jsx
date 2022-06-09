@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 import HtmlReactParser from 'html-react-parser'
 import { adminRequest } from '../axios';
 import { product_data } from '../dummyData.js'
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import app from '../Firebase';
 
 
 function SingleProduct() {
@@ -69,10 +71,7 @@ function SingleProduct() {
         setInputs({ ...inputs, productImage: e.target.files[0] });
     }
 
-    /*  const handleEditor = (e, editor) => {
-         const data = editor.getData();
-         setAddData(data)
-     } */
+
     const handleProductsColors = (e) => {
         setProductColors(prev => [...prev, color.hex])
     }
@@ -95,29 +94,62 @@ function SingleProduct() {
 
     const EditProduct = async (e) => {
         e.preventDefault();
-        const editedProduct = {
-            categoryId: category,
-            title: inputs.title,
-            desc: addData,
-            color: product_colors,
-            size: product_size,
-            stock: inputs.stock,
-            price: inputs.price
+        if (inputs?.productImage) {
+            const fileName = new Date().getTime() + inputs?.productImage.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, inputs?.productImage);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const editedProduct = {
+                            categoryId: category,
+                            title: inputs.title,
+                            desc: addData,
+                            color: product_colors,
+                            size: product_size,
+                            stock: inputs.stock,
+                            price: inputs.price,
+                            productImage: downloadURL
+                        }
+                        updateProduct(productId, editedProduct, dispatch)
+                        getCurrentProduct()
+                    });
+                }
+            );
+        } else {
+            const editedProduct = {
+                categoryId: category,
+                title: inputs.title,
+                desc: addData,
+                color: product_colors,
+                size: product_size,
+                stock: inputs.stock,
+                price: inputs.price,
+
+            }
+            updateProduct(productId, editedProduct, dispatch)
+            getCurrentProduct()
         }
-        if (inputs.productImage) {
-            const formData = new FormData();
-            const filename = `IMAGE-${Date.now()}` + `${inputs?.productImage?.name}`.split(' ').join('').toLowerCase()
-            formData.append('filename', filename);
-            formData.append('file', inputs.productImage);
-            editedProduct.productImage = filename;
-            try {
-                await adminRequest.post('/upload', formData);
-            } catch { }
-        }
-        updateProduct(productId, editedProduct, dispatch)
-        getCurrentProduct()
+
     }
-    //console.log(inputs)
+
     return (
         <Container>
 
@@ -129,7 +161,7 @@ function SingleProduct() {
 
                     <ProductImageContainer>
                         <ProductImage>
-                            <img src={PF + current_product?.productImage} alt='' />
+                            <img src={/* PF + */ current_product?.productImage} alt='' />
                         </ProductImage>
                         <ProductTitle>
                             <span>{current_product?.title} </span>
@@ -161,7 +193,7 @@ function SingleProduct() {
                 {current_product && <>
                     <UserProfileImageContainer>
                         <UserProfileImage>
-                            <img src={PF + current_product?.productImage} alt='' />
+                            <img src={/* PF +  */current_product?.productImage} alt='' />
                         </UserProfileImage>
                         <UploadContainer >
                             <LabelContainer htmlFor='file' style={{

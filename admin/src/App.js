@@ -17,13 +17,14 @@ import { useSelector } from 'react-redux';
 import CategoryList from './pages/CategoryList';
 import SingleCategory from './pages/SingleCategory';
 import AddCategory from './pages/AddCategory';
+import { useEffect } from 'react';
 
 function App() {
   const [users_data, setUsersData] = useState(users_rows)
   const [products_data, setProductsData] = useState(products_rows)
   const [categories_data, setCategoriesData] = useState(categories_rows)
-  //const admin = JSON.parse(JSON.parse(localStorage.getItem('persist:root')).admin)?.current_user?.user?.isAdmin
-  const current_user = JSON.parse(JSON.parse(localStorage.getItem('persist:root')).admin)?.current_user
+  const current_user = JSON.parse(JSON.parse(localStorage.getItem('persist:root'))?.admin)?.current_user
+
   return (
     <div className="App">
       <Router>

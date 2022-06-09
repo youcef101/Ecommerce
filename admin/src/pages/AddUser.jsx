@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import PublishIcon from '@material-ui/icons/Publish';
 import { adminRequest } from '../axios';
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import app from '../Firebase';
+
+
 
 function AddUser() {
     const [inputs, setInputs] = useState({
@@ -42,41 +46,83 @@ function AddUser() {
 
     const CreateNewUser = async (e) => {
         e.preventDefault();
-        let newUser = {
-            firstName: inputs.firstName,
-            lastName: inputs.lastName,
-            email: inputs.email,
-            password: inputs.password,
-            password_confirm: inputs.password_confirm,
-            country: inputs.country,
-            city: inputs.city,
-            codePostal: inputs.codePostal,
-            adresse: inputs.adresse,
-            phone: inputs.phone,
-            isAdmin: inputs.isAdmin
-        }
-        if (inputs.profileImage) {
-            const formData = new FormData();
-            const filename = `IMAGE-${Date.now()}` + `${inputs?.profileImage?.name}`.split(' ').join('').toLowerCase()
-            formData.append('filename', filename);
-            formData.append('file', inputs.profileImage);
-            newUser.profileImage = filename;
+        if (inputs?.profileImage) {
+            const fileName = new Date().getTime() + inputs?.profileImage.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, inputs?.profileImage);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const newUser = {
+                            firstName: inputs.firstName,
+                            lastName: inputs.lastName,
+                            email: inputs.email,
+                            password: inputs.password,
+                            password_confirm: inputs.password_confirm,
+                            country: inputs.country,
+                            city: inputs.city,
+                            codePostal: inputs.codePostal,
+                            adresse: inputs.adresse,
+                            phone: inputs.phone,
+                            isAdmin: inputs.isAdmin,
+                            profileImage: downloadURL
+                        }
+                        try {
+                            adminRequest.post('/auth/register', newUser);
+                            setInputs(
+                                {
+                                    ...inputs,
+                                    [e.target.name]: ''
+                                }
+                            )
+                        } catch { }
+                    });
+                }
+            );
+        } else {
+            const newUser = {
+                firstName: inputs.firstName,
+                lastName: inputs.lastName,
+                email: inputs.email,
+                password: inputs.password,
+                password_confirm: inputs.password_confirm,
+                country: inputs.country,
+                city: inputs.city,
+                codePostal: inputs.codePostal,
+                adresse: inputs.adresse,
+                phone: inputs.phone,
+                isAdmin: inputs.isAdmin,
+
+            }
             try {
-                await adminRequest.post('/upload', formData);
+                adminRequest.post('/auth/register', newUser);
+                setInputs(
+                    {
+                        ...inputs,
+                        [e.target.name]: ''
+                    }
+                )
             } catch { }
         }
-        try {
-            await adminRequest.post('/auth/register', newUser);
-            setInputs(
-                {
-                    ...inputs,
-                    [e.target.name]: ''
-                }
-            )
-        } catch { }
     }
-    console.log(inputs)
-    console.log(selected)
+
     return (
         <Container>
             <TitleContainer>New User</TitleContainer>

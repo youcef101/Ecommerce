@@ -12,6 +12,8 @@ import PublishIcon from '@material-ui/icons/Publish';
 import { adminRequest, axiosInstance } from '../axios'
 import { updateUser } from '../Redux/apiCalls'
 import { useDispatch } from 'react-redux'
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import app from '../Firebase';
 
 
 function SingleUser() {
@@ -53,30 +55,63 @@ function SingleUser() {
 
     const EditUser = async (e) => {
         e.preventDefault();
-        let edited_user = {
-            firstName: inputs.firstName,
-            lastName: inputs.lastName,
-            email: inputs.email,
-            country: inputs.country,
-            city: inputs.city,
-            codePostal: inputs.codePostal,
-            adresse: inputs.adresse,
-            phone: inputs.phone,
+        if (inputs?.profileImage) {
+            const fileName = new Date().getTime() + inputs?.profileImage.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, inputs?.profileImage);
+            uploadTask.on('state_changed',
+                (snapshot) => {
 
-        }
-        if (inputs.profileImage) {
-            const formData = new FormData();
-            const filename = `IMAGE-${Date.now()}` + `${inputs?.profileImage?.name}`.split(' ').join('').toLowerCase()
-            formData.append('filename', filename);
-            formData.append('file', inputs.profileImage);
-            edited_user.profileImage = filename;
-            try {
-                await adminRequest.post('/upload', formData);
-            } catch { }
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
 
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const edited_user = {
+                            firstName: inputs.firstName,
+                            lastName: inputs.lastName,
+                            email: inputs.email,
+                            country: inputs.country,
+                            city: inputs.city,
+                            codePostal: inputs.codePostal,
+                            adresse: inputs.adresse,
+                            phone: inputs.phone,
+                            profileImage: downloadURL
+
+                        }
+                        updateUser(userId, edited_user, dispatch) &&
+                            getCurrentUser()
+                    });
+                }
+            );
+        } else {
+            const edited_user = {
+                firstName: inputs.firstName,
+                lastName: inputs.lastName,
+                email: inputs.email,
+                country: inputs.country,
+                city: inputs.city,
+                codePostal: inputs.codePostal,
+                adresse: inputs.adresse,
+                phone: inputs.phone,
+
+
+            }
+            updateUser(userId, edited_user, dispatch) &&
+                getCurrentUser()
         }
-        updateUser(userId, edited_user, dispatch) &&
-            getCurrentUser()
 
     }
 
@@ -92,7 +127,7 @@ function SingleUser() {
                 <LeftContainer>
                     <UserImageContainer>
                         <UserImage>
-                            <img src={current_user?.profileImage && PF + current_user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                            <img src={current_user?.profileImage && /* PF + */ current_user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
                         </UserImage>
                         <UserInfoContainer>
                             <Username>{current_user?.fullName}</Username>
@@ -164,7 +199,7 @@ function SingleUser() {
                         <Right>
                             <UserProfileImageContainer>
                                 <UserProfileImage>
-                                    <img src={current_user?.profileImage && PF + current_user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                                    <img src={current_user?.profileImage &&/*  PF + */ current_user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
                                 </UserProfileImage>
                                 <InputContainer style={{ marginTop: '15px' }}>
                                     <LabelFile htmlFor='file'><PublishIcon fontSize='small' />Edit Profile Image</LabelFile>

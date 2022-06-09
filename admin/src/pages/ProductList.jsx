@@ -34,7 +34,7 @@ function ProductList() {
             renderCell: (params) => {
                 return (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img src={PF + params.row.productImage} alt='' style={{ width: '90px', objectFit: 'cover', height: '90px', marginRight: '10px' }} />
+                        <img src={/* PF + */ params.row.productImage} alt='' style={{ width: '90px', objectFit: 'cover', height: '90px', marginRight: '10px' }} />
                         <p style={{ maxWidth: '250px', height: '100%', display: 'flex', flexDirection: 'column' }}>{params.row.title}</p>
 
                     </div>

@@ -33,7 +33,7 @@ function UserList() {
             renderCell: (params) => {
                 return (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img src={params.row.profileImage && PF + params?.row?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
+                        <img src={params.row.profileImage && /* PF + */ params?.row?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '10px' }} />
                         {params.row.fullName}
                     </div>
                 )

@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { useEffect } from 'react';
 const initialState = {
     users: [],
-    current_user: JSON.parse(JSON.parse(localStorage.getItem('persist:root')).admin).current_user || null,
+    current_user: JSON.parse(JSON.parse(localStorage.getItem('persist:root'))?.admin)?.current_user || null,
     errors: false,
     isFetching: false,
 }
+
 const adminSlice = createSlice({
     name: 'admin',
     initialState,

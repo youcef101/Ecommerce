@@ -4,6 +4,8 @@ import PublishIcon from '@material-ui/icons/Publish';
 import { useDispatch } from 'react-redux'
 import { addCategory } from '../Redux/apiCalls';
 import { adminRequest } from '../axios'
+import { getStorage, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import app from '../Firebase';
 
 function AddCategory() {
     const [title, setTitle] = useState('')
@@ -13,29 +15,54 @@ function AddCategory() {
         setTitle(e.target.value)
     }
     const handleFile = (e) => {
-        console.log(e.target.files[0])
+        //console.log(e.target.files[0])
         setCategoryImage(e.target.files[0]);
     }
-    console.log(`IMAGE-${Date.now()}` + `${categoryImage.name}`.split(' ').join('').toLowerCase())
+    //console.log(`IMAGE-${Date.now()}` + `${categoryImage.name}`.split(' ').join('').toLowerCase())
     const CreateCategory = async (e) => {
         e.preventDefault();
-        const newCat = {
-            title,
-        }
         if (categoryImage) {
-            const formData = new FormData();
+            const fileName = new Date().getTime() + categoryImage.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, categoryImage);
+            uploadTask.on('state_changed',
+                (snapshot) => {
 
-            const filename = `IMAGE-${Date.now()}` + `${categoryImage?.name}`.split(' ').join('').toLowerCase()
-            formData.append('filename', filename);
-            formData.append('file', categoryImage);
-            newCat.categoryImage = filename;
-            try {
-                await adminRequest.post('/upload', formData);
-            } catch { }
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const newCat = {
+                            title,
+                            categoryImage: downloadURL
+                        }
+                        addCategory(newCat, dispatch)
+                        setCategoryImage('')
+                        setTitle('')
+                    });
+                }
+            );
+        } else {
+            const newCat = {
+                title,
+            }
+            addCategory(newCat, dispatch)
+            setCategoryImage('')
+            setTitle('')
         }
-        addCategory(newCat, dispatch)
-        setCategoryImage('')
-        setTitle('')
 
     }
 
