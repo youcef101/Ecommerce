@@ -85,7 +85,7 @@ function ProductDetail() {
             <DetailContainer>
                 {current_product && <>
                     <ProductImg>
-                        <img src={PF + current_product.productImage} alt='' />
+                        <img src={/* PF + */ current_product.productImage} alt='' />
                     </ProductImg>
                     <ProductInfoContainer>
                         <ProductTitle>

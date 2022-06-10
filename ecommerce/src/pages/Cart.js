@@ -89,7 +89,7 @@ function Cart() {
                                     <MiddleContainer >
                                         <LeftContainer>
                                             <ProductImg >
-                                                <img src={PF + product.productImage} alt='' />
+                                                <img src={/* PF + */ product.productImage} alt='' />
                                             </ProductImg>
                                             <ProductInfo>
                                                 <ProductName><b>Product:</b> {product.title}</ProductName>

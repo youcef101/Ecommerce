@@ -12,7 +12,7 @@ function Product({ product }) {
         <Container>
             <ProductContainer>
                 <ImageContainer>
-                    <img src={PF + product?.productImage} alt='' />
+                    <img src={/* PF + */ product?.productImage} alt='' />
                 </ImageContainer>
                 <IconContainer>
                     <Icon>

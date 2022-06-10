@@ -10,7 +10,7 @@ function CategoryItem({ item }) {
         <Container>
             {item && <>
                 <ImageContainer>
-                    <img src={PF + item.categoryImage} alt='' />
+                    <img src={/* PF + */ item.categoryImage} alt='' />
                 </ImageContainer>
                 <Info>
                     <Title>{item.title}</Title>

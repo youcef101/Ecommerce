@@ -9,7 +9,7 @@ function SliderCard({ product }) {
             <Link to={`/product_detail/${product._id}`}>
                 <Card>
                     <Wrap>
-                        <img src={PF + product?.productImage} alt='' />
+                        <img src={/* PF + */ product?.productImage} alt='' />
                     </Wrap>
                     <CardTitle>{product?.title}</CardTitle>
                     <CardPrice>$ {product?.price}</CardPrice>
